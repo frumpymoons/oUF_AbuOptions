@@ -1,0 +1,9 @@
+## Interface: 60000
+## Author: Abu
+## Title: oUF_|cffffffffAbu|rOptions
+## Notes: Option Panel for oUF_Abu.
+## Dependencies: oUF_Abu
+## Version: 6.0.2-3
+## LoadOnDemand: 1
+
+configuration.xml
