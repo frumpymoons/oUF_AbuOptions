@@ -26,6 +26,48 @@ local NameTextModeDropmenu = {
 	["CLASS"] = {L.ColorClass, L.ColorClassTip },
 	["CUSTOM"] 	= 	{ L.ColorCustom, L.ColorCustomTip },
 }
+local update = { }
+-- Update functions
+function update.SafeZone()
+	if oUF_AbuPlayerCastbar and oUF_AbuPlayerCastbar.SafeZone then
+		oUF_AbuPlayerCastbar.SafeZone:SetVertexColor(unpack(TextureOptions:GetSettings("castbarSafezoneColor")))
+	end
+end
+function update.HealthBars()
+	local mode = TextureOptions:GetSettings("healthcolormode")
+	for _, v in pairs(oUF.objects) do
+		local hp = v.Health
+		if (hp) then
+			hp.colorClass = mode == 'CLASS'
+			hp.colorReaction = mode == 'CLASS'
+			hp.colorSmooth = mode == 'NORMAL'
+			hp.colorTapping = mode ~= 'CUSTOM'
+			if mode == 'CUSTOM' then
+				hp:SetStatusBarColor(unpack(TextureOptions:GetSettings("healthcolor")))
+			else
+				hp:ForceUpdate()
+			end
+		end
+	end
+end
+function update.PowerBars()
+	local mode = TextureOptions:GetSettings("powercolormode")
+	for _, v in ipairs(oUF.objects) do
+		local mp = v.Power
+		if (mp) then
+			mp.colorClass = mode == 'CLASS'
+			mp.colorPower = mode == 'TYPE'
+			if mode == 'CUSTOM' then
+				mp:SetStatusBarColor(unpack(TextureOptions:GetSettings("powercolor")))
+			else
+				mp:ForceUpdate()
+			end
+		end
+	end
+end
+function update.PlayerTexture()
+	oUFAbu:UpdateBaseFrames("player")
+end
 
 function TextureOptions:AddWidgets()
 	self.widgets = {}
@@ -43,24 +85,24 @@ function TextureOptions:AddWidgets()
 	
 
 	local ddgap = -14
-	local nametext = self:DropdownWithColor(f, "NameText", NameTextModeDropmenu, "TextNameColorMode", "TextNameColor")
+	local nametext = self:DropdownWithColor(f, "NameText", NameTextModeDropmenu, "TextNameColorMode", nil, "TextNameColor")
 	nametext:SetPoint('TOPLEFT', playerTexture, 'BOTTOMLEFT', 0, ddgap)
 
-	local hpbar = self:DropdownWithColor(f, "Health", HealthModeDropmenu, "healthcolormode", "healthcolor")
+	local hpbar = self:DropdownWithColor(f, "Health", HealthModeDropmenu, "healthcolormode", update.HealthBars, "healthcolor", update.HealthBars)
 	hpbar:SetPoint('TOPLEFT', nametext, 'BOTTOMLEFT', 0, ddgap)
-	local mpbar = self:DropdownWithColor(f, "Power", PowerModeDropmenu, "powercolormode", "powercolor")
+	local mpbar = self:DropdownWithColor(f, "Power", PowerModeDropmenu, "powercolormode", update.PowerBars, "powercolor", update.PowerBars)
 	mpbar:SetPoint('TOPLEFT', hpbar, 'BOTTOMLEFT', 0, ddgap)
 
-	local framecp = self:CreateColorSelector(f, L.FrameColor, 'frameColor', false, true)
+	local framecp = self:CreateColorSelector(f, L.FrameColor, 'frameColor', false, true, false, oUFAbu.SetAllFrameColors)
 	framecp:SetPoint('TOPLEFT', mpbar, 'BOTTOMLEFT', 52, -1)
-	local szcp = self:CreateColorSelector(f, L.LatencyColor, 'castbarSafezoneColor', true, true)
+	local szcp = self:CreateColorSelector(f, L.LatencyColor, 'castbarSafezoneColor', true, true, false, update.SafeZone)
 	szcp:SetPoint('TOPLEFT', framecp, 'BOTTOMLEFT', 0, -10)
-	local bdcp = self:CreateColorSelector(f, L.BackdropColor, 'backdropColor', true, true)
+	local bdcp = self:CreateColorSelector(f, L.BackdropColor, 'backdropColor', true, true, false, oUFAbu.SetAllBackdrops)
 	bdcp:SetPoint('TOPLEFT', szcp, 'BOTTOMLEFT', 0, -10)
 
-	local hptext = self:DropdownWithColor(f, "HealthText", HealthTextModeDropmenu, "TextHealthColorMode", "TextHealthColor")
+	local hptext = self:DropdownWithColor(f, "HealthText", HealthTextModeDropmenu, "TextHealthColorMode", nil, "TextHealthColor")
 	hptext:SetPoint('TOPLEFT', hpbar, 'TOPRIGHT', 30, -2)
-	local mptext = self:DropdownWithColor(f, "PowerText", PowerTextModeDropmenu, "TextPowerColorMode", "TextPowerColor")
+	local mptext = self:DropdownWithColor(f, "PowerText", PowerTextModeDropmenu, "TextPowerColorMode", nil, "TextPowerColor")
 	mptext:SetPoint('TOPLEFT', hptext, 'BOTTOMLEFT', 0, ddgap)
 end
 
@@ -69,39 +111,6 @@ function TextureOptions:UpdateValues()
 	for i, dd in pairs(self.widgets) do
 		dd:UpdateValues()
 	end
-
-	oUFAbu:SetAllStatusBars()
-	oUFAbu:SetAllBackdrops()
-	oUFAbu:UpdateBaseFrames("player")
-	oUFAbu:SetAllFrameColors()
-
-	if oUF_AbuPlayerCastbar and oUF_AbuPlayerCastbar.SafeZone then
-		oUF_AbuPlayerCastbar.SafeZone:SetVertexColor(unpack(self:GetSettings("castbarSafezoneColor")))
-	end
-
-	for _, unitframe in ipairs(oUF.objects) do
-		local hp = unitframe.Health
-		if (hp) then
-			hp.colorClass = self:GetSettings("healthcolormode") == 'CLASS'
-			hp.colorReaction = self:GetSettings("healthcolormode") == 'CLASS'
-			hp.colorSmooth = self:GetSettings("healthcolormode") == 'NORMAL'
-			if self:GetSettings("healthcolormode") == 'CUSTOM' then
-				hp:SetStatusBarColor(unpack(self:GetSettings("healthcolor")))
-			else
-				hp:ForceUpdate()
-			end
-		end
-		local mp = unitframe.Power
-		if (mp) then
-			mp.colorClass = TextureOptions:GetSettings("powercolormode") == 'CLASS'
-			mp.colorPower = TextureOptions:GetSettings("powercolormode") == 'TYPE'
-			if self:GetSettings("powercolormode") == 'CUSTOM' then
-				mp:SetStatusBarColor(unpack(self:GetSettings("powercolor")))
-			else
-				mp:ForceUpdate()
-			end
-		end
-	end
 end
 
 -- [[ Getting/setting settings ]]
@@ -109,10 +118,13 @@ function TextureOptions:GetSettings(db)
 	return oUFAbuOptions:GetSettings()[db]
 end
 
-function TextureOptions:SetSetting(db, val, reqReload)
+function TextureOptions:SetSetting(db, val, reqReload, updatefunc)
 	oUFAbuOptions:GetSettings()[db] = val
 	if (reqReload) then
 		oUFAbuOptions.reload = true
+	end
+	if updatefunc then
+		updatefunc()
 	end
 	self:UpdateValues()
 end
@@ -126,7 +138,7 @@ function TextureOptions:StatusbarSelector(name, db)
 	local selector = oUFAbuOptions.StatusbarSelector:New(name, self, 552, 165)
 
 	selector.SetSavedValue = function(self, value)
-		TextureOptions:SetSetting(db, value)
+		TextureOptions:SetSetting(db, value, false, oUFAbu.SetAllStatusBars)
 	end
 
 	selector.GetSavedValue = function(self)
@@ -137,12 +149,13 @@ function TextureOptions:StatusbarSelector(name, db)
 	return selector
 end
 
-function TextureOptions:CreateColorSelector(parent, name, db, alpha, button, hidetext)
+function TextureOptions:CreateColorSelector(parent, name, db, alpha, button, hidetext, updatefunc)
 	local cp = oUFAbuOptions.ColorSelector:New(name, parent, alpha, hidetext)
 	cp.db = db
+	cp.func = updatefunc
 	if alpha then
 		cp.OnSetColor = function(self, r, g, b, a)
-			TextureOptions:SetSetting(self.db, {r, g, b, a})
+			TextureOptions:SetSetting(self.db, {r, g, b, a}, false, self.func)
 		end
 
 		cp.GetColor = function(self)
@@ -151,7 +164,7 @@ function TextureOptions:CreateColorSelector(parent, name, db, alpha, button, hid
 		end
 	else
 		cp.OnSetColor = function(self, r, g, b)
-			TextureOptions:SetSetting(self.db, {r, g, b})
+			TextureOptions:SetSetting(self.db, {r, g, b}, false, self.func)
 		end
 
 		cp.GetColor = function(self)
@@ -173,6 +186,43 @@ function TextureOptions:CreateColorSelector(parent, name, db, alpha, button, hid
 	end)
 
 	return cp
+end
+
+function TextureOptions:DropdownWithColor(parent, prefix, dropdownmenu, modeDB, modefunc, colorDB, colorfunc)
+	local dd = oUFAbuOptions.Dropdown:New(L[prefix.."ColorMode"], parent, 180)
+	dd.db = modeDB
+	dd.func = modefunc
+	local cp = self:CreateColorSelector(dd, L[prefix.."ColorCustom"], colorDB, nil, nil, true, colorfunc)
+	cp:SetPoint('TOPLEFT', dd, 'TOPRIGHT', -5, -4)
+
+	dd.SetSavedValue = function(self, value)
+		if value == "CUSTOM" then
+			cp:Show()
+		else
+			cp:Hide()
+		end
+		TextureOptions:SetSetting(self.db, value, false, self.func)
+	end
+	dd.GetSavedValue = function(self)
+		local value = TextureOptions:GetSettings(self.db)
+		if value == "CUSTOM" then
+			cp:Show()
+		else
+			cp:Hide()
+		end 
+		return value
+	end
+	dd.GetSavedText = function(self)
+		return dropdownmenu[self:GetSavedValue()][1]
+	end
+	UIDropDownMenu_Initialize(dd, function(self)
+		for value, desc in pairs(dropdownmenu) do
+			self:AddItem(desc[1], value, desc[2])
+		end
+	end)
+
+	table.insert(self.widgets, dd)
+	return dd
 end
 
 --[[ Dropdown Style Picker ]]
@@ -212,7 +262,7 @@ function TextureOptions:PlayerTexture(parent)
 	}
 
 	dd.SetSavedValue = function(self, value)
-		TextureOptions:SetSetting("playerStyle", value)
+		TextureOptions:SetSetting("playerStyle", value, false, update.PlayerTexture)
 		if value == 'custom' then
 			box:Show()
 		else
@@ -235,42 +285,6 @@ function TextureOptions:PlayerTexture(parent)
 
 	UIDropDownMenu_Initialize(dd, function(self)
 		for value, desc in pairs(ddmenu) do
-			self:AddItem(desc[1], value, desc[2])
-		end
-	end)
-
-	table.insert(self.widgets, dd)
-	return dd
-end
-
-function TextureOptions:DropdownWithColor(parent, prefix, dropdownmenu, modeDB, colorDB)
-	local dd = oUFAbuOptions.Dropdown:New(L[prefix.."ColorMode"], parent, 180)
-	dd.db = modeDB
-	local cp = self:CreateColorSelector(dd, L[prefix.."ColorCustom"], colorDB, nil, nil, true)
-	cp:SetPoint('TOPLEFT', dd, 'TOPRIGHT', -5, -4)
-
-	dd.SetSavedValue = function(self, value)
-		if value == "CUSTOM" then
-			cp:Show()
-		else
-			cp:Hide()
-		end
-		TextureOptions:SetSetting(self.db, value)
-	end
-	dd.GetSavedValue = function(self)
-		local value = TextureOptions:GetSettings(self.db)
-		if value == "CUSTOM" then
-			cp:Show()
-		else
-			cp:Hide()
-		end 
-		return value
-	end
-	dd.GetSavedText = function(self)
-		return dropdownmenu[self:GetSavedValue()][1]
-	end
-	UIDropDownMenu_Initialize(dd, function(self)
-		for value, desc in pairs(dropdownmenu) do
 			self:AddItem(desc[1], value, desc[2])
 		end
 	end)
