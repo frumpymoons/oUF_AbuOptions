@@ -181,12 +181,14 @@ function StatusbarSelector:CreateScrollChild()
 	local buttons = {}
 
 	local i = 0
-	for _, key in ipairs(getStatusbarIDs()) do
-		local texture = fetchStatusbar(key)
+	local list = getStatusbarIDs()
+	for num = 1, #list do
+		local name = list[num]
+		local texture = fetchStatusbar(name)
 		if isValidStatusbar(texture) then
 			i = i + 1
 			local f = StatusbarButton:New(scrollChild)
-			f:SetStatusbarTexture(texture):SetText(key)
+			f:SetStatusbarTexture(texture):SetText(name)
 			f:SetScript('OnClick', f_OnClick)
 
 			if i == 1 then
