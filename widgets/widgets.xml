@@ -1,16 +1,14 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+
 	<!-- basic widgets -->
-	<Script file="tabPanel.lua"/>
-	<Script file="group.lua"/>
-	<Script file="checkButton.lua"/>
-	<Script file="slider.lua"/>
-	<Script file="dropdown.lua"/>
-	<Script file="colorSelector.lua"/>
+	<Script file="basic.lua"/>
 	
 	<!-- custom widgets -->
 	<Script file="auraEditor.lua"/>
 	<Script file="fontSelector.lua"/>
 	<Script file="statusbarSelector.lua"/>
+	<Script file="profileSelector.lua"/>
+	<Script file="tabPanel.lua"/>
 	<!--
 		Tab Panel template, basically a direct copy of the OptionsFrameList template
 		Why XML?  Because when I tried making this manually it looked a bit funny :P

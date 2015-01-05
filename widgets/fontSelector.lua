@@ -5,15 +5,17 @@
 		Thanks to Tuller, the author of OmniCC
 --]]
 
-_G.oUFAbuOptions = oUFAbuOptions or {}
+local _, ns = ...
+ns.Widgets = ns.Widgets or {}
 
 local LSM = LibStub('LibSharedMedia-3.0')
-local Classy = LibStub('Classy-1.0')
 local LSM_FONT = LSM.MediaType.FONT
-local PADDING = 2
-local FONT_HEIGHT = 24
-local BUTTON_HEIGHT = 54
-local SCROLL_STEP = BUTTON_HEIGHT + PADDING
+
+local FONT_HEIGHT = 22
+local BUTTON_HEIGHT, BUTTON_PADDING = 52, 2
+local ROW_HEIGHT = BUTTON_HEIGHT + BUTTON_PADDING
+local SCROLLFRAME_BORDER_SPACING, SCROLLBAR_WIDTH  = 8, 20
+local NUM_COLUMNS = 2
 
 local function getFontIDs()
 	return LSM:List(LSM_FONT)
@@ -38,21 +40,14 @@ end
 	The Font Button
 --]]
 
-local FontButton = Classy:New('CheckButton')
-
-function FontButton:New(parent, altColor)
-	local b = self:Bind(CreateFrame('CheckButton', nil, parent))
+local function createFontButton(parent, i)
+	local b = CreateFrame('CheckButton', nil, parent)
 	b:SetHeight(BUTTON_HEIGHT)
-	b:SetScript('OnClick', b.OnClick)
-    b:SetScript('OnEnter', b.OnEnter)
-    b:SetScript('OnLeave', b.OnLeave)
 
 	local bg = b:CreateTexture(nil, 'BACKGROUND')
 	bg:SetAllPoints(b)
-
-    b.altColor = altColor
+	bg:SetTexture(.3, .3, .3, 0.6)
     b.bg = bg
-    b:OnLeave()
 
 	local text = b:CreateFontString(nil, 'ARTWORK')
 	text:SetPoint('BOTTOM', 0, PADDING)
@@ -71,178 +66,148 @@ function FontButton:New(parent, altColor)
 	ct:SetSize(24, 24)
 	b:SetCheckedTexture(ct)
 
-	return b
-end
-
-function FontButton:SetFontFace(font)
-	self.fontText:SetFont(font, FONT_HEIGHT, 'OUTLINE')
-	self.fontText:SetText('1234567890')
+	b:SetScript('OnEnter', function(self)
+		self.bg:SetTexture(1, 1, 1, 0.3)
+	end)
+	b:SetScript('OnLeave', function(self)
+		self.bg:SetTexture(.3, .3, .3, 0.6)
+	end)
+	b:SetScript("OnClick", function(self)
+		local selector = self:GetParent()
+		selector:SetSavedValue(self.fontText:GetFont())
+		selector:Update()
+	end)
 	
-	return self
-end
-
-function FontButton:GetFontFace()
-	return (self.fontText:GetFont())
-end
-
-function FontButton:OnEnter()
-    self.bg:SetTexture(1, 1, 1, 0.3)
-end
-
-function FontButton:OnLeave()
-    if self.altColor then
-        self.bg:SetTexture(0.2, 0.2, 0.2, 0.6)
-    else
-        self.bg:SetTexture(0.25, 0.25, 0.25, 0.6)
-    end
+	return b
 end
 
 --[[
 	The Font Selector
 --]]
 
-local FontSelector = Classy:New('Frame')
-oUFAbuOptions.FontSelector = FontSelector
+function ns.Widgets.FontSelector(parent, title)
+	local f = ns.Widgets.Group(parent, title)
+	f:SetText(title)
 
-function FontSelector:New(title, parent, width, height)
-	local f = self:Bind(oUFAbuOptions.Group:New(title, parent))
-	local scrollFrame = f:CreateScrollFrame()
-	scrollFrame:SetPoint('TOPLEFT', 8, -8)
+	local scrollFrame = CreateFrame('ScrollFrame', f:GetName().."Faux", f, 'FauxScrollFrameTemplate')
+	scrollFrame:SetPoint('TOPLEFT', SCROLLFRAME_BORDER_SPACING, -SCROLLFRAME_BORDER_SPACING)
+	scrollFrame:SetPoint('BOTTOMRIGHT', -SCROLLFRAME_BORDER_SPACING, SCROLLFRAME_BORDER_SPACING)
+	scrollFrame:SetScript('OnVerticalScroll', function(self, offset)
+		self.offset = math.floor(offset / ROW_HEIGHT + 0.5)
+		f:UpdateScroll()
+	end)
 	f.scrollFrame = scrollFrame
 
-	local scrollChild = f:CreateScrollChild()
-	scrollFrame:SetScrollChild(scrollChild)
-	f.scrollChild = scrollChild
+	local bar = scrollFrame.ScrollBar
+	local upbuttonHeight = 10
+	bar:ClearAllPoints()
+	bar:SetPoint('TOPRIGHT', scrollFrame, -4, -16)
+	bar:SetPoint('BOTTOMRIGHT', scrollFrame, -4, 16)
 
-	local scrollBar = f:CreateScrollBar()
-	scrollBar:SetPoint('TOPRIGHT', -8, -8)
-	scrollBar:SetPoint('BOTTOMRIGHT', -8, 6)
-	scrollBar:SetWidth(16)
-	scrollFrame:SetSize(width, height)
-	f.scrollBar = scrollBar
+	local buttons = setmetatable({}, {__index = function(t, i)
+		local button = createFontButton(f, i)
 
-	f:Hide()
-	f:SetScript('OnShow', f.OnShow)
-	return f
-end
-
-do
-	local function scrollFrame_OnSizeChanged(self)
-		local scrollChild = self:GetParent().scrollChild
-		scrollChild:SetWidth(self:GetWidth())
-	
-		local scrollBar  = self:GetParent().scrollBar
-		local scrollMax = max(scrollChild:GetHeight() - self:GetHeight(), 0)
-		scrollBar:SetMinMaxValues(0, scrollMax)
-		scrollBar:SetValue(0)
-	end
-	
-	local function scrollFrame_OnMouseWheel(self, delta)
-		local scrollBar = self:GetParent().scrollBar
-		local min, max = scrollBar:GetMinMaxValues()
-		local current = scrollBar:GetValue()
-
-		if IsShiftKeyDown() and (delta > 0) then
-		   scrollBar:SetValue(min)
-		elseif IsShiftKeyDown() and (delta < 0) then
-		   scrollBar:SetValue(max)
-		elseif (delta < 0) and (current < max) then
-		   scrollBar:SetValue(current + SCROLL_STEP)
-		elseif (delta > 0) and (current > 1) then
-		   scrollBar:SetValue(current - SCROLL_STEP)
+		if i == 1 then
+			button:SetPoint('TOPLEFT', scrollFrame)
+			button:SetPoint('TOPRIGHT', scrollFrame, 'TOP', -(bar:GetWidth() + SCROLLFRAME_BORDER_SPACING + BUTTON_PADDING)/2, 0)
+		elseif i == 2 then
+			button:SetPoint('TOPLEFT', f.buttons[1], 'TOPRIGHT', BUTTON_PADDING, 0)
+			button:SetPoint('TOPRIGHT', scrollFrame, 'TOPRIGHT', -(bar:GetWidth() + SCROLLFRAME_BORDER_SPACING + BUTTON_PADDING), 0)
+		else
+			button:SetPoint('TOPLEFT', f.buttons[i-2], 'BOTTOMLEFT', 0, -BUTTON_PADDING)
+			button:SetPoint('TOPRIGHT', f.buttons[i-2], 'BOTTOMRIGHT', 0, -BUTTON_PADDING)
 		end
-	end
 
-	function FontSelector:CreateScrollFrame()
-		local scrollFrame = CreateFrame('ScrollFrame', nil, self)
-		scrollFrame:EnableMouseWheel(true)
-		scrollFrame:SetScript('OnSizeChanged', scrollFrame_OnSizeChanged)
-		scrollFrame:SetScript('OnMouseWheel', scrollFrame_OnMouseWheel)
+		rawset(t, i, button)
+		return button
+	end })
+	f.buttons = buttons
 
-		return scrollFrame
-	end
-end
+	f.UpdateScroll = function(self, forceUpdate)
+		local items = self.items
+		local offset = FauxScrollFrame_GetOffset(self.scrollFrame)
 
-do
-	local function scrollBar_OnValueChanged(self, value)
-		self:GetParent().scrollFrame:SetVerticalScroll(value)
-	end
+		if (not forceUpdate) and (self.lastOffset == offset) then
+			return; -- no need to update
+		end
+		self.lastOffset = offset
 
-	function FontSelector:CreateScrollBar()
-		local scrollBar = CreateFrame('Slider', nil, self)
-		scrollBar:SetOrientation('VERTICAL')
-		scrollBar:SetScript('OnValueChanged', scrollBar_OnValueChanged)
+		local selected = self:GetSavedValue() 
 
-		local bg = scrollBar:CreateTexture(nil, 'BACKGROUND')
-		bg:SetAllPoints(true)
-		bg:SetTexture(0, 0, 0, 0.5)
-
-		local thumb = scrollBar:CreateTexture(nil, 'OVERLAY')
-		thumb:SetTexture([[Interface\Buttons\UI-ScrollBar-Knob]])
-		thumb:SetSize(25, 25)
-		scrollBar:SetThumbTexture(thumb)
-
-		return scrollBar
-	end
-end
-
-function FontSelector:CreateScrollChild()
-	local scrollChild = CreateFrame('Frame')
-	local f_OnClick = function(f) self:Select(f:GetFontFace()) end
-	local buttons = {}
-
-	local i = 0
-	for _, fontId in ipairs(getFontIDs()) do
-		local font = fetchFont(fontId)
-		if isValidFont(font) then
-			i = i + 1
-			local f = FontButton:New(scrollChild, i % 4 == 0 or (i + 1) % 4 == 0)
-			f:SetFontFace(font):SetText(fontId)
-			f:SetScript('OnClick', f_OnClick)
-
-			if i == 1 then
-				f:SetPoint('TOPLEFT')
-				f:SetPoint('TOPRIGHT', scrollChild, 'TOP', -PADDING/2, 0)
-			elseif i == 2 then
-				f:SetPoint('TOPLEFT', scrollChild, 'TOP', PADDING/2, 0)
-				f:SetPoint('TOPRIGHT')
+		for i = 1, (self.maxRows*2) do
+			local itemIndex = i + (offset * 2)
+			if itemIndex <= #items then
+				local button = self.buttons[i]
+				button.fontText:SetFont(items[itemIndex].font, FONT_HEIGHT, 'OUTLINE')
+				button.fontText:SetText('1234567890')
+				button:SetText(items[itemIndex].name)	
+				button:SetChecked(button.fontText:GetFont() == selected)
+				button:Show()
 			else
-				f:SetPoint('TOPLEFT', buttons[i-2], 'BOTTOMLEFT', 0, -PADDING)
-				f:SetPoint('TOPRIGHT', buttons[i-2], 'BOTTOMRIGHT', 0, -PADDING)
+				self.buttons[i]:Hide()
 			end
-
-			tinsert(buttons, f)
 		end
 	end
 
-	scrollChild:SetWidth(self.scrollFrame:GetWidth())
-	scrollChild:SetHeight(ceil(#buttons / 2) * (BUTTON_HEIGHT + PADDING) - PADDING)
+	f.Update = function(self)
+		if (not self.items) then
+			return self:UpdateMediaList()
+		end
 
-	self.buttons = buttons
-	return scrollChild
-end
+		self.maxRows = self.scrollFrame:GetHeight() / ROW_HEIGHT
+		FauxScrollFrame_Update(self.scrollFrame, math.ceil(#self.items / NUM_COLUMNS), self.maxRows, ROW_HEIGHT, nil, nil, nil, nil, nil, nil, true )
+		-- changing offset so we jump to selected item
+		local selected = self:GetSavedValue()
+		for i = 1, #self.items do
+			if self.items[i].font == selected then
+				local selected_offset = math.floor((i - 1) / NUM_COLUMNS)
+				local offset = self.scrollFrame.offset 	-- 0
 
+				if (offset > selected_offset) or (offset + self.maxRows <= selected_offset) then
+					local selectedRowOffset = selected_offset - 1
+					selectedRowOffset = math.max(selectedRowOffset, 0)
+					selectedRowOffset = math.min(selectedRowOffset, (self.maxRows * NUM_COLUMNS) + (#self.items / NUM_COLUMNS))
+					FauxScrollFrame_OnVerticalScroll(self.scrollFrame, (selectedRowOffset * ROW_HEIGHT), ROW_HEIGHT)
+				end
+				break
+			end
+		end
 
-function FontSelector:OnShow()
-	self:UpdateSelected()
-end
-
-function FontSelector:Select(value)
-	self:SetSavedValue(value)
-	self:UpdateSelected()
-end
-
-function FontSelector:SetSavedValue(value)
-	assert(false, 'Hey, you forgot to set SetSavedValue for ' .. self:GetName())
-end
-
-function FontSelector:GetSavedValue()
-	assert(false, 'Hey, you forgot to set GetSavedValue for ' .. self:GetName())
-end
-
-function FontSelector:UpdateSelected()
-	local selectedValue = self:GetSavedValue()
-	for i, button in pairs(self.buttons) do
-		button:SetChecked(button:GetFontFace() == selectedValue)
+		self:UpdateScroll(true)
 	end
+
+	f.UpdateMediaList = function(self)
+		local items = getFontIDs()
+
+		self.items = self.items or {}
+		wipe(self.items)
+
+		for i = 1, #items do
+			local name = items[i]
+			local font = fetchFont(name)
+			if isValidFont(font) then
+				self.items[#self.items + 1] = {name = name, font = font}
+			end
+		end
+
+		table.sort(self.items, function( a, b ) return (a.name < b.name); end)
+
+		self:Update()
+	end
+
+	LSM:RegisterCallback("LibSharedMedia_Registered", function(callback, mediaType, key)
+		if mediaType == "font" then
+			f:UpdateMediaList()
+		end
+	end)
+
+	function f:SetSavedValue(value)
+		assert(false, 'Hey, you forgot to set SetSavedValue for ' .. self:GetName())
+	end
+
+	function f:GetSavedValue()
+		return assert(false, 'Hey, you forgot to set GetSavedValue for ' .. self:GetName())
+	end
+
+	return f
 end

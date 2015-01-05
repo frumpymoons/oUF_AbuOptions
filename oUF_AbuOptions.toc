@@ -6,4 +6,14 @@
 ## Version: 6.0.2-4
 ## LoadOnDemand: 1
 
-configuration.xml
+localization\localization.xml
+widgets\widgets.xml
+
+mainpanels.lua
+aurapanels.lua
+
+tabs\auras.lua
+tabs\general.lua
+tabs\positions.lua
+tabs\units.lua
+

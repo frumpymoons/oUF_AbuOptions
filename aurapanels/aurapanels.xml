@@ -1,5 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="non-arena.lua"/>
-	<Script file="arena.lua"/>
-	<Script file="boss.lua"/>
-</Ui>
