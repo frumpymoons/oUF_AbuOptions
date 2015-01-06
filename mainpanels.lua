@@ -27,7 +27,6 @@ do
 			local panel = Options:GetCurrentTab()
 
 			if (panel.Update) then
-			print('ON SELECT PROFILE:',panel:GetName())
 				panel:Update()
 			end
 		end
