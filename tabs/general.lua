@@ -152,7 +152,7 @@ end
 local general = CreateFrame('Frame', optionsName..'_General', options)
 
 function general:Create(  )
-	local _, playerClass = UnitClass('player')
+	local _, class = UnitClass('player')
 	local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 	local color = RAID_CLASS_COLORS[class]
 
@@ -225,6 +225,10 @@ function general:Create(  )
 			local showEnraged = createCheckButton(self, "General_Enrage", 'showEnraged', true)
 			showEnraged:SetPoint('TOPLEFT', showVeng, 'BOTTOMLEFT', 0, -CB_GAP)
 			showEnraged.Text:SetTextColor(color.r, color.g, color.b)
+		elseif class == "DRUID" then
+			local showShrooms = createCheckButton(self, "General_Shrooms", 'showShrooms', true)
+			showShrooms:SetPoint('TOPLEFT', showVeng, 'BOTTOMLEFT', 0, -CB_GAP)
+			showShrooms.Text:SetTextColor(color.r, color.g, color.b)
 		end
 	elseif class == "PRIEST" then
 		local showWeak = createCheckButton(self, "General_WSBar", 'showWeakenedSoul', true)

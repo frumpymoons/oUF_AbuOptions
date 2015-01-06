@@ -84,6 +84,8 @@ ns.L = {
 	General_SnDTip = "Display a bar for Slice and Dice.",
 	General_Ant = "Show Anticipation Charges",
 	General_AntTip = "Display additional combopoints for Anticipation charges.",
+	General_Shrooms = "Show Mushroom icons",
+	General_ShroomsTip = "Display the textures around the icons, instead of just the text.",
 
 ---- TEXTURES,
 	Texture = "Textures",
