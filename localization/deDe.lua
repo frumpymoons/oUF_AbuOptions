@@ -1,3 +1,4 @@
+
 local _, ns = ...
 
 if ns.locale ~= "deDE" then return; end

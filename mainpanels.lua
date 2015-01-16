@@ -20,15 +20,15 @@ do
 	local dropdown = ns.Widgets.ProfileSelector( Options, function() return oUFAbu:GetProfileID(); end )
 
 	dropdown.OnSetProfile = function(self, id)
-		if (oUFAbu:SetProfile(id)) then
-			ns.reload = true
-			ns.settings = oUFAbu:GetSettings()
+		oUFAbu:SetProfile(id)
+		ns.reload = true
+		ns.settings = oUFAbu:GetSettings()
+		oUFAbu:UpdateBaseFrames()
 
-			local panel = Options:GetCurrentTab()
+		local panel = Options:GetCurrentTab()
 
-			if (panel.Update) then
-				panel:Update()
-			end
+		if (panel.Update) then
+			panel:Update()
 		end
 	end
 	dropdown.OnResetProfile = function(self, value)
@@ -55,7 +55,7 @@ do
 			local name = _G[self:GetName()..'EditBox']:GetText()
 			if name ~= '' or name == 'Default' then
 				oUFAbu:CreateProfile(name)
-				dropdown:UpdateValues()-- sets the new profile as current
+				dropdown:Update()-- sets the new profile as current
 			end
 		end,
 		OnShow = function(self)
@@ -80,7 +80,6 @@ do
 			local panel = Aurafilter:GetCurrentTab()
 
 			if (panel.Update) then
-				print('ON SELECT UPDATE:',panel:GetName())
 				panel:Update()
 			end
 		end
@@ -109,7 +108,7 @@ do
 			local name = _G[self:GetName()..'EditBox']:GetText()
 			if name ~= '' or name == 'Default' then
 				oUFAbu:CreateAuraProfile(name)
-				dropdown:UpdateValues()-- sets the new profile as current
+				dropdown:Update()-- sets the new profile as current
 			end
 		end,
 		

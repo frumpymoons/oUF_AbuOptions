@@ -72,12 +72,10 @@ local function createSlider(parent, text, db, reload, lo, hi, step)
 	f.tooltip = L[text..'Tip']
 
 	f.SetSavedValue = function(self, value)
-		--print("SetSaved: ",value)
 		SET(self.db, value, self.reload)
 	end
 
 	f.GetSavedValue = function(self)
-	--	print("GetSavedValue: ",value)
 		return GET(self.db)
 	end
 
@@ -152,7 +150,7 @@ end
 local general = CreateFrame('Frame', optionsName..'_General', options)
 
 function general:Create(  )
-	local _, class = UnitClass('player')
+	local _, class, classIndex = UnitClass('player')
 	local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 	local color = RAID_CLASS_COLORS[class]
 
@@ -216,35 +214,31 @@ function general:Create(  )
 	local classPortraits = createCheckButton(self, "General_ClassP", 'classPortraits')
 	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
 
-		-- Class buttons
+	-- Class buttons
+	local inital = #self.widgets
+	if GET(class) then
+		createCheckButton(self, "General_ClassModule", class, true)
+	end
+
 	if class == "DRUID" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "WARRIOR" or class == "MONK" then
-		local showVeng = createCheckButton(self, "General_Resolve", 'showVengeance', true)
-		showVeng:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
-		showVeng.Text:SetTextColor(color.r, color.g, color.b)
+		createCheckButton(self, "General_Resolve", 'showVengeance', true)
 		if class == "WARRIOR" then
-			local showEnraged = createCheckButton(self, "General_Enrage", 'showEnraged', true)
-			showEnraged:SetPoint('TOPLEFT', showVeng, 'BOTTOMLEFT', 0, -CB_GAP)
-			showEnraged.Text:SetTextColor(color.r, color.g, color.b)
+			createCheckButton(self, "General_Enrage", 'showEnraged', true)
 		elseif class == "DRUID" then
-			local showShrooms = createCheckButton(self, "General_Shrooms", 'showShrooms', true)
-			showShrooms:SetPoint('TOPLEFT', showVeng, 'BOTTOMLEFT', 0, -CB_GAP)
-			showShrooms.Text:SetTextColor(color.r, color.g, color.b)
+			createCheckButton(self, "General_Shrooms", 'showShrooms', true)
 		end
 	elseif class == "PRIEST" then
-		local showWeak = createCheckButton(self, "General_WSBar", 'showWeakenedSoul', true)
-		showWeak:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
-		showWeak.Text:SetTextColor(color.r, color.g, color.b)
+		createCheckButton(self, "General_WSBar", 'showWeakenedSoul', true)
 	elseif class == "MAGE" then
-		local showArcStacks = createCheckButton(self, "General_Arcane", 'showArcStacks', true)
-		showArcStacks:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
-		showArcStacks.Text:SetTextColor(color.r, color.g, color.b)
+		createCheckButton(self, "General_Arcane", 'showArcStacks', true)
 	elseif class == "ROGUE" then
-		local sliceanddice = createCheckButton(self, "General_SnD", 'showSlicenDice', true)
-		sliceanddice:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
-		sliceanddice.Text:SetTextColor(color.r, color.g, color.b)
-		local anticipation = createCheckButton(self, "General_Ant", 'showAnticipation', true)
-		anticipation:SetPoint('TOPLEFT', sliceanddice, 'BOTTOMLEFT', 0, -CB_GAP)
-		anticipation.Text:SetTextColor(color.r, color.g, color.b)
+		createCheckButton(self, "General_SnD", 'showSlicenDice', true)
+		createCheckButton(self, "General_Ant", 'showAnticipation', true)
+	end
+
+	for i = inital + 1, #self.widgets do
+		self.widgets[i]:SetPoint('TOPLEFT', self.widgets[i-1], 'BOTTOMLEFT', 0, -CB_GAP)
+		self.widgets[i].Text:SetTextColor(color.r, color.g, color.b)
 	end
 end
 
@@ -288,7 +282,6 @@ local update = {
 		for _, v in ipairs(oUF.objects) do
 			local mp = v.Power
 			if (mp) then
-				print('found a mp',v:GetName())
 				mp.colorClass = mode == 'CLASS'
 				mp.colorPower = mode == 'TYPE'
 				if mode == 'CUSTOM' then
@@ -299,6 +292,7 @@ local update = {
 			end
 		end
 	end,
+	
 	Safezone = function()
 		if oUF_AbuPlayerCastbar and oUF_AbuPlayerCastbar.SafeZone then
 			oUF_AbuPlayerCastbar.SafeZone:SetVertexColor(unpack(GET"castbarSafezoneColor"))
@@ -485,10 +479,10 @@ function fonts:Create()
 	bigfont:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 0, -65)
 	bigfont:SetPoint('BOTTOMRIGHT', normalfont, 'BOTTOMRIGHT', 0, -245)
 
-	local bigoutline = createDropDown(self, "Font_NameSize", 'fontBigOutline', oUFAbu.SetAllFonts, outlines, 180)
+	local bigoutline = createDropDown(self, "Font_NameOutline", 'fontBigOutline', oUFAbu.SetAllFonts, outlines, 180)
 	bigoutline:SetPoint('TOPLEFT', bigfont, 'BOTTOMLEFT', 32, -20)
 
-	local bigSize = createSlider(self, "Font_NameOutline", 'fontBigSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
+	local bigSize = createSlider(self, "Font_NameSize", 'fontBigSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
 	bigSize:SetPoint('LEFT', bigoutline, 'RIGHT', 40, 0)
 	bigSize.GetFormattedText = slider_GetFormattedText
 

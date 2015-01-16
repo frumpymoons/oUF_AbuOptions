@@ -52,6 +52,8 @@ ns.L = {
 ---- GENERAL PANEL
 	General = "Basic",
 
+	General_ClassModule = "Enable Default Class Modules",
+	General_ClassModuleTip = "Enable Blizzard modules for your class.",
 	General_Party = "Enable Party Frames",
 	General_PartyInRaid = "Display Party Frames in Raid",
 	General_Arena = "Enable Arena Frames",
