@@ -94,6 +94,9 @@ do
 		f.auraEditor = parent.auraEditor
 		f.menu = parent.auraEditor.DropDownMenu
 
+		f.xOffset = 13
+		f.yOffset = 22
+
 		f.initialize = function(self, level)
 			if not level then return end
 			local info = UIDropDownMenu_CreateInfo()
@@ -104,6 +107,7 @@ do
 				info.owner = self
 				info.checked = (i == self.button.filter)
 				info.func = setFilter
+				info.minWidth = 150
 				UIDropDownMenu_AddButton(info)
 			end
 		end

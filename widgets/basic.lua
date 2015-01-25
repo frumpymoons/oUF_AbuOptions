@@ -110,6 +110,9 @@ function ns.Widgets.Dropdown(parent, name, width, items)
 	text:SetText(name)
 	f.titleText = text
 
+	f.xOffset = 13
+	f.yOffset = 22
+
 	f.initialize = function(self)
 		local saved = self:GetSavedValue()
 		for i = 1, #self.items do
@@ -117,6 +120,7 @@ function ns.Widgets.Dropdown(parent, name, width, items)
      		local info = UIDropDownMenu_CreateInfo();
 			info.text = item.text or item.value
 			info.checked = (saved == item.value)
+			info.minWidth = width
 			info.func = function()
 				self:SetSavedValue(item.value)
 				self:Update()

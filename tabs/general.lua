@@ -196,16 +196,16 @@ function general:Create(  )
 
 	--LEFT
 	local focMod = createDropDown(self, "General_ModKey", 'focMod', true,
-		{	{ value = 'shift-', text = L.Shift },
-			{ value = 'ctrl-', text = L.Ctrl },
-			{ value = 'alt-', text = L.Alt }
+		{	{ value = 'shift-', text = SHIFT_KEY },
+			{ value = 'ctrl-', text = CTRL_KEY },
+			{ value = 'alt-', text = ALT_KEY }
 	})
 	focMod:SetPoint("TOPLEFT", self, "TOPRIGHT", -265, -38)
 	local focBut = createDropDown(self, "General_ModButton", 'focBut', true,
-		{	{ value = 'NONE', text = L.Disable },
-			{ value = '1', text = L.Button1 },
-			{ value = '2', text = L.Button2 },
-			{ value = '3', text = L.MButton },
+		{	{ value = 'NONE', text = DISABLE },
+			{ value = '1', text = KEY_BUTTON1 },
+			{ value = '2', text = KEY_BUTTON2 },
+			{ value = '3', text = KEY_BUTTON3 },
 	})
 	focBut:SetPoint("TOPLEFT", focMod, "BOTTOMLEFT", 0, -20)
 
@@ -454,7 +454,7 @@ function fonts:Create()
 	end
 
 	local outlines = {
-		{ value = 'NONE', text = L['None'] },
+		{ value = 'NONE', text = NONE },
 		{ value = 'THINOUTLINE', text = L['Font_ThinOutline'] },
 		{ value = 'OUTLINE', text = L['Font_Outline'] },
 		{ value = 'THICKOUTLINE', text = L['Font_ThickOutline'] },

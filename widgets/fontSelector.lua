@@ -21,19 +21,19 @@ local function getFontIDs()
 	return LSM:List(LSM_FONT)
 end
 
-local function fetchFont(fontId)
-	if fontId and LSM:IsValid(LSM_FONT, fontId) then
-		return LSM:Fetch(LSM_FONT, fontId)
-	end
-	return LSM:GetDefault(LSM_FONT)
-end
-
 local fontTester = nil
 local function isValidFont(font)
 	if not fontTester then
 		fontTester = CreateFont('oUFAbuOptions_FontTester')
 	end
 	return fontTester:SetFont(font, FONT_HEIGHT, 'OUTLINE')
+end
+
+local function fetchFont(fontId)
+	if fontId and LSM:IsValid(LSM_FONT, fontId) then
+		return LSM:Fetch(LSM_FONT, fontId)
+	end
+	return LSM:GetDefault(LSM_FONT)
 end
 
 --[[
@@ -74,8 +74,8 @@ local function createFontButton(parent, i)
 	end)
 	b:SetScript("OnClick", function(self)
 		local selector = self:GetParent()
-		selector:SetSavedValue(self.fontText:GetFont())
-		selector:Update()
+		selector:SetSavedValue(selector.items[self.index].font)
+		selector:UpdateScroll(true)
 	end)
 	
 	return b
@@ -133,7 +133,6 @@ function ns.Widgets.FontSelector(parent, title)
 		self.lastOffset = offset
 
 		local selected = self:GetSavedValue() 
-
 		for i = 1, (self.maxRows*2) do
 			local itemIndex = i + (offset * 2)
 			if itemIndex <= #items then
@@ -141,7 +140,8 @@ function ns.Widgets.FontSelector(parent, title)
 				button.fontText:SetFont(items[itemIndex].font, FONT_HEIGHT, 'OUTLINE')
 				button.fontText:SetText('1234567890')
 				button:SetText(items[itemIndex].name)	
-				button:SetChecked(button.fontText:GetFont() == selected)
+				button:SetChecked(items[itemIndex].font == selected)
+				button.index = itemIndex
 				button:Show()
 			else
 				self.buttons[i]:Hide()
@@ -154,8 +154,9 @@ function ns.Widgets.FontSelector(parent, title)
 			return self:UpdateMediaList()
 		end
 
-		self.maxRows = self.scrollFrame:GetHeight() / ROW_HEIGHT
+		self.maxRows = math.floor(self.scrollFrame:GetHeight() / ROW_HEIGHT)
 		FauxScrollFrame_Update(self.scrollFrame, math.ceil(#self.items / NUM_COLUMNS), self.maxRows, ROW_HEIGHT, nil, nil, nil, nil, nil, nil, true )
+		
 		-- changing offset so we jump to selected item
 		local selected = self:GetSavedValue()
 		for i = 1, #self.items do
