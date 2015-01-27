@@ -3,7 +3,7 @@
 ## Title: oUF_|cffffffffAbu|rOptions
 ## Notes: Option Panel for oUF_Abu.
 ## Dependencies: oUF_Abu
-## Version: 6.0.3-2
+## Version: 6.0.3-3
 ## LoadOnDemand: 1
 
 localization\localization.xml

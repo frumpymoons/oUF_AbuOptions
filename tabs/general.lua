@@ -216,7 +216,7 @@ function general:Create(  )
 
 	-- Class buttons
 	local inital = #self.widgets
-	if GET(class) then
+	if type(GET(class)) == "boolean" then
 		createCheckButton(self, "General_ClassModule", class, true)
 	end
 
