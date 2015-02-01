@@ -196,7 +196,7 @@ function panel:Create()
 		{ value = 'TOP', text = L.TOP },
 		{ value = 'BOTTOM', text = L.BOTTOM },
 		{ value = 'LEFT', text = L.LEFT },
-		{ value = 'NONE', text = L.Disable },
+		{ value = 'NONE', text = DISABLE },
 	}
 	local buffPos = createDropDown(self, 'BuffPos', 'buffPos', true, AuraPositionMenu)
 	buffPos:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 0, -55)

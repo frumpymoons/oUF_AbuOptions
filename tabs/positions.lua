@@ -122,8 +122,11 @@ local function createRow(parent)
 	row.Update = function(self)
 		local db = ns.settings[self.key1][self.key2]
 		local point, x, y = string.split('/', db)
-		local first, second = string.match(x, "(%w+)(LEFT)$") or string.match(x, "(%w+)(RIGHT)$")
-		self.pText:SetText(second and L.first..L.second or L.point)
+		local first, second = string.match(point, "(%w+)(LEFT)$")
+		if not second then
+			first, second = string.match(point, "(%w+)(RIGHT)$")
+		end
+		self.pText:SetText(second and L[first]..L[second] or L[point])
 		self.xBox:SetText(x)
 		self.yBox:SetText(y)
 	end
@@ -168,7 +171,7 @@ function panel:Create()
 		yTitle:SetWidth(80)
 		local pTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
 		pTitle:SetText(L.Positions_Point)
-		pTitle:SetPoint('LEFT', yTitle, 'RIGHT', 10 + 10 + 10, 0)
+		pTitle:SetPoint('LEFT', yTitle, 'RIGHT', 10 + 10 + 25, 0)
 		pTitle:SetJustifyH('CENTER')
 		pTitle:SetWidth(80)
 		local resetTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
@@ -184,14 +187,8 @@ function panel:Create()
 		local row = createRow(self)
 		row:SetPoint('TOPLEFT', self.rows[i-1], 'BOTTOMLEFT', 0, -GAP)
 		row.key1, row.key2 = frame.key1, frame.key2
-
-		local name
-		if frame.key2 == "cbposition" then
-			name = L[frame.key1].." "..L.Castbar
-		else
-			name = L[frame.key1]
-		end
-		row.name:SetText(name)
+		
+		row.name:SetText(frame.objectname)
 
 		self.rows[i] = row
 	end
