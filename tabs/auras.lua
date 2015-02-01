@@ -2,7 +2,7 @@ local _, ns = ...
 local auras = _G.oUF_AbuAuraFilters
 local aurasname = auras:GetName()
 
-local L = ns.L
+local L = oUFAbu.localization
 
 -------------------------------------------------------------------------
 

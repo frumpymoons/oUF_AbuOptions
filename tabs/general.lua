@@ -1,5 +1,5 @@
 local _, ns = ...
-local L = ns.L
+local L = oUFAbu.localization
 
 local options = _G['oUF_AbuOptions']
 local optionsName = options:GetName()

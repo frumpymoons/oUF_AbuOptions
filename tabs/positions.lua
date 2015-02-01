@@ -1,5 +1,5 @@
 local _, ns = ...
-local L = ns.L
+local L = oUFAbu.localization
 local options = _G['oUF_AbuOptions']
 local panel = CreateFrame('Frame', options:GetName()..'_Positions')
 
@@ -122,8 +122,8 @@ local function createRow(parent)
 	row.Update = function(self)
 		local db = ns.settings[self.key1][self.key2]
 		local point, x, y = string.split('/', db)
-
-		self.pText:SetText(point)
+		local first, second = string.match(x, "(%w+)(LEFT)$") or string.match(x, "(%w+)(RIGHT)$")
+		self.pText:SetText(second and L.first..L.second or L.point)
 		self.xBox:SetText(x)
 		self.yBox:SetText(y)
 	end
@@ -139,7 +139,7 @@ end
 
 function panel:Create()
 	self.rows = {}
-
+	--10 [name160] 40 [x100] 10 [y100] 10 [130]
 	-- Header with labels
 	do 
 		local header = CreateFrame('Frame', nil, self)
@@ -152,27 +152,27 @@ function panel:Create()
 		self.rows[0] = header
 
 		local name = header:CreateFontString(nil, nil, 'GameFontNormal')
-		name:SetText("Name")
+		name:SetText(L.Positions_Name)
 		name:SetPoint('LEFT', 10, 0)
 		name:SetJustifyH('LEFT')
-		name:SetWidth(40)
+		name:SetWidth(160)
 		local xTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
-		xTitle:SetText("X")
-		xTitle:SetPoint('LEFT', name, 'RIGHT', 120 + 40 + 30, 0)
+		xTitle:SetText(L.Positions_X)
+		xTitle:SetPoint('LEFT', name, 'RIGHT', 40 + 10, 0)
 		xTitle:SetJustifyH('CENTER')
-		xTitle:SetWidth(40)
+		xTitle:SetWidth(80)
 		local yTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
-		yTitle:SetText("Y")
-		yTitle:SetPoint('LEFT', xTitle, 'RIGHT', 30 + 10 + 30, 0)
+		yTitle:SetText(L.Positions_Y)
+		yTitle:SetPoint('LEFT', xTitle, 'RIGHT', 10 + 10 + 10, 0)
 		yTitle:SetJustifyH('CENTER')
-		yTitle:SetWidth(40)
+		yTitle:SetWidth(80)
 		local pTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
-		pTitle:SetText("Point")
-		pTitle:SetPoint('LEFT', yTitle, 'RIGHT', 30 + 10 + 45, 0)
+		pTitle:SetText(L.Positions_Point)
+		pTitle:SetPoint('LEFT', yTitle, 'RIGHT', 10 + 10 + 10, 0)
 		pTitle:SetJustifyH('CENTER')
-		pTitle:SetWidth(40)
+		pTitle:SetWidth(80)
 		local resetTitle = header:CreateFontString(nil, nil, 'GameFontNormal')
-		resetTitle:SetText("Reset")
+		resetTitle:SetText(RESET)
 		resetTitle:SetPoint('RIGHT', -7, 0)
 		resetTitle:SetJustifyH('CENTER')
 		resetTitle:SetWidth(40)
@@ -185,7 +185,13 @@ function panel:Create()
 		row:SetPoint('TOPLEFT', self.rows[i-1], 'BOTTOMLEFT', 0, -GAP)
 		row.key1, row.key2 = frame.key1, frame.key2
 
-		row.name:SetText(frame.object:GetName())
+		local name
+		if frame.key2 == "cbposition" then
+			name = L[frame.key1].." "..L.Castbar
+		else
+			name = L[frame.key1]
+		end
+		row.name:SetText(name)
 
 		self.rows[i] = row
 	end
@@ -209,4 +215,4 @@ function panel:Update()
 	end
 	oUFAbu:UpdateAnchorPositions()
 end
-options:AddTab("Positions", panel)
+options:AddTab(L.Positions, panel)

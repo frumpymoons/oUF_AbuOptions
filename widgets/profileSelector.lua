@@ -93,8 +93,8 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 		
 		--base group
 		local info = UIDropDownMenu_CreateInfo()
-		info.text = 'Default'
-		info.value = 'Default'
+		info.text = oUFAbu.DEFAULT
+		info.value = oUFAbu.DEFAULT
 		info.func = selectProfile
 		info.owner = self
 		info.hasArrow = true
@@ -102,7 +102,7 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 
 		--custom profiles
 		for i,v in ipairs(profiles) do
-			if v ~= 'Default' then 
+			if v ~= oUFAbu.DEFAULT then 
 				local info = UIDropDownMenu_CreateInfo()
 				info.text = v
 				info.value = v
@@ -116,7 +116,7 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 
 		--new group button
 		local info = UIDropDownMenu_CreateInfo()
-		info.text = "Add Profile"
+		info.text = NEW
 		info.func = addProfile
 		info.owner = self
 		info.notCheckable = true

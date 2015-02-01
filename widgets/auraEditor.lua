@@ -1,6 +1,7 @@
 
 local _, ns = ...
 ns.Widgets = ns.Widgets or {}
+local L = oUFAbu.localization
 
 local BUTTON_HEIGHT, BUTTON_PADDING = 42, 2
 local BUTTON_BORDER_SPACING = 7
@@ -38,7 +39,7 @@ do
 		text:SetPoint("TOPLEFT", f, "TOPLEFT", 13, -12)
 		text:SetJustifyH("LEFT")
 		text:SetJustifyV("TOP")
-		text:SetText("Enter a Spell ID")
+		text:SetText(L.Auras_EnterSpellID)
 		f.text = text
 
 		--create edit box 
@@ -341,7 +342,7 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 
 		local spell = editFrame.editBox:GetNumber()
 		if spell == 0 then
-			editFrame.text:SetText("Enter a Spell ID")
+			editFrame.text:SetText(L.Auras_EnterSpellID)
 			self.editFrame.addButton:Disable()
 			return
 		end
@@ -353,10 +354,10 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 				self.editFrame.addButton:Enable()
 				return
 			else
-				editFrame.text:SetFormattedText(RED_FONT_COLOR_CODE .. "Already added!|r")
+				editFrame.text:SetFormattedText(RED_FONT_COLOR_CODE .. L.Auras_AlreadyAdded.."|r")
 			end
 		else
-			editFrame.text:SetText(RED_FONT_COLOR_CODE .. "Invalid Spell ID!|r")
+			editFrame.text:SetText(RED_FONT_COLOR_CODE .. L.Auras_InvalidSpellID.."|r")
 		end
 		editFrame.addButton:Disable()
 	end

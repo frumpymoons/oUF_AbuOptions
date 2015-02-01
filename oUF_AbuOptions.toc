@@ -6,7 +6,6 @@
 ## Version: 6.0.3-4
 ## LoadOnDemand: 1
 
-localization\localization.xml
 widgets\widgets.xml
 
 mainpanels.lua

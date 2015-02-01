@@ -2,7 +2,7 @@ local _, ns = ...
 
 local options = _G['oUF_AbuOptions']
 local panel = CreateFrame('Frame', options:GetName()..'_Units')
-local L = ns.L
+local L = oUFAbu.localization
 local BUTTON_HEIGHT = 20
 
 local unitTable = {
@@ -172,7 +172,7 @@ function panel:Create()
 	local healthTag = createDropDown(self, "TextHealthTag", "HealthTag", false, 
 		{
 			{ value = 'NUMERIC', text = L.Tag_Numeric, tooltip = L.Tag_NumericTip },
-			{ value = 'BOTH', 	 text = L.Tag_Both, 	  tooltip = L.Tag_BothTip },
+			{ value = 'BOTH', 	 text = L.Tag_Both,    tooltip = L.Tag_BothTip },
 			{ value = 'PERCENT', text = L.Tag_Percent, tooltip = L.Tag_PercentTip },
 			{ value = 'MINIMAL', text = L.Tag_Minimal, tooltip = L.Tag_MinimalTip },
 			{ value = 'DEFICIT', text = L.Tag_Deficit, tooltip = L.Tag_DeficitTip },
@@ -193,9 +193,9 @@ function panel:Create()
 	enAura:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 17, -33)
 	-- or
 	local AuraPositionMenu = {
-		{ value = 'TOP', text = L.Top },
-		{ value = 'BOTTOM', text = L.Bottom },
-		{ value = 'LEFT', text = L.Left },
+		{ value = 'TOP', text = L.TOP },
+		{ value = 'BOTTOM', text = L.BOTTOM },
+		{ value = 'LEFT', text = L.LEFT },
 		{ value = 'NONE', text = L.Disable },
 	}
 	local buffPos = createDropDown(self, 'BuffPos', 'buffPos', true, AuraPositionMenu)

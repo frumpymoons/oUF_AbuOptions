@@ -1,10 +1,9 @@
 local _, ns = ...
-local L = ns.L
-
 
 ns.defaultsettings = oUFAbu:GetDefaultSettings()
 ns.settings = oUFAbu:GetSettings()
 
+local L = oUFAbu.localization
 -----------------------------------------------------------------------------
 -- Build frames
 
@@ -53,7 +52,7 @@ do
 		
 		OnAccept = function(self)
 			local name = _G[self:GetName()..'EditBox']:GetText()
-			if name ~= '' or name == 'Default' then
+			if name ~= '' or name == oUFAbu.DEFAULT then
 				oUFAbu:CreateProfile(name)
 				dropdown:Update()-- sets the new profile as current
 			end
@@ -106,7 +105,7 @@ do
 		
 		OnAccept = function(self)
 			local name = _G[self:GetName()..'EditBox']:GetText()
-			if name ~= '' or name == 'Default' then
+			if name ~= '' or name == oUFAbu.DEFAULT then
 				oUFAbu:CreateAuraProfile(name)
 				dropdown:Update()-- sets the new profile as current
 			end
