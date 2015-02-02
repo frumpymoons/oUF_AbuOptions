@@ -195,7 +195,7 @@ function panel:Create()
 
 	local butt = CreateFrame("Button", nil, self, "UIPanelButtonTemplate")
 	butt:SetSize(140, 25)
-	butt:SetText("Toggle Anchors")
+	butt:SetText(L.Positions_Toggle)
 	butt:SetScript("OnClick", function(self)
 		if ( not oUFAbu:ToggleAllAnchors() ) then
 			self:LockHighlight()
