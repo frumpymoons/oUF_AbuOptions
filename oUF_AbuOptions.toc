@@ -3,7 +3,7 @@
 ## Title: oUF_|cffffffffAbu|rOptions
 ## Notes: Option Panel for oUF_Abu.
 ## Dependencies: oUF_Abu
-## Version: 6.0.3-4
+## Version: 6.0.3-5
 ## LoadOnDemand: 1
 
 widgets\widgets.xml
