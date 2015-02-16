@@ -260,7 +260,7 @@ end
 -----------------------------------------------------------------------
 --		Colorselector
 
-function ns.Widgets.ColorSelector(parent, name, hasOpacity)
+function ns.Widgets.ColorSelector(parent, hasOpacity)
 	local f = CreateFrame('Button', nil, parent)
 	f.hasOpacity = hasOpacity
 	f:SetWidth(18)
@@ -304,7 +304,6 @@ function ns.Widgets.ColorSelector(parent, name, hasOpacity)
 		if (not self.text) then
 			local text = f:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 			text:SetPoint('LEFT', self, 'RIGHT', 4, 0)
-			text:SetText(name)
 			self.text = text
 		end
 		self.text:SetText(text)

@@ -83,11 +83,10 @@ local function createSlider(parent, text, db, reload, lo, hi, step)
 	return f
 end
 
-local function createColorSelector(parent, text, db, reload, hasOpacity, hasResetButton)
-	local f = ns.Widgets.ColorSelector(parent, L[text], hasOpacity)
+local function createColorSelector(parent, db, reload, hasOpacity, hasResetButton)
+	local f = ns.Widgets.ColorSelector(parent, hasOpacity)
 	f.db = db
 	f.reload = reload
-	f.tooltip = L[text..'Tip']
 
 	if hasOpacity then
 		f.OnSetColor = function(self, r, g, b, a)
@@ -128,7 +127,7 @@ end
 local function createDropdownWithColorSelector(parent, text, dropDB, colorDB, reload, items)
 	local dropdown = createDropDown(parent, text, dropDB, reload, items, 180)
 
-	local color = createColorSelector(parent, text.."Custom", colorDB, reload)
+	local color = createColorSelector(parent, colorDB, reload)
 	color:SetPoint('TOPLEFT', dropdown, 'TOPRIGHT', -5, -4)
 	dropdown.ColorSelector = color
 
@@ -394,24 +393,24 @@ function textures:Create()
 		})
 	mpText:SetPoint('TOPLEFT', hpText, 'BOTTOMLEFT', 0, -GAP)
 
-	local frameColor = createColorSelector(self, 'Color_Frame', 'frameColor', update.Framecolors, false, true)
+	local frameColor = createColorSelector(self, 'frameColor', update.Framecolors, false, true)
 	frameColor:SetPoint('TOPLEFT', mpText, 'BOTTOMLEFT', 52, -1)
 	frameColor:SetText(L['Color_Frame'])
-	local szColor = createColorSelector(self, 'Color_Latency', 'castbarSafezoneColor', update.Safezone, true, true)
+	local szColor = createColorSelector(self, 'castbarSafezoneColor', update.Safezone, true, true)
 	szColor:SetPoint('TOPLEFT', frameColor, 'BOTTOMLEFT', 0, -10)
 	szColor:SetText(L['Color_Latency'])
-	local backdColor = createColorSelector(self, 'Color_Backdrop', 'backdropColor', update.Backdrops, true, true)
+	local backdColor = createColorSelector(self, 'backdropColor', update.Backdrops, true, true)
 	backdColor:SetPoint('TOPLEFT', szColor, 'BOTTOMLEFT', 0, -10)
 	backdColor:SetText(L['Color_Backdrop'])
 
-	local hpBar = createDropdownWithColorSelector(self, 'Color_Health', 'healthcolormode', 'healthcolor', update.Healthbars, 
+	local hpBar = createDropdownWithColorSelector(self, 'Color_HealthBar', 'healthcolormode', 'healthcolor', update.Healthbars, 
 		{
 			{ value = 'NORMAL', text = L['Color_Gradient'], tooltip = L['Color_GradientTip'] },
 			{ value = 'CLASS', 	text = L['Color_Class'], 	tooltip = L['Color_ClassTip'] },
 			{ value = 'CUSTOM', text = L['Color_Custom'], 	tooltip = L['Color_CustomTip'] },
 		})
 	hpBar:SetPoint('TOPLEFT', hpText, 'TOPRIGHT', 70, 0)
-	local mpBar = createDropdownWithColorSelector(self, 'Color_Power', 'powercolormode', 'powercolor', update.Powerbars, 
+	local mpBar = createDropdownWithColorSelector(self, 'Color_PowerBar', 'powercolormode', 'powercolor', update.Powerbars, 
 		{
 		{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
 		{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },
