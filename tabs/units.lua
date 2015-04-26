@@ -155,8 +155,11 @@ function panel:Create()
 	desc:SetPoint('TOPLEFT', config, 'TOPLEFT', 13, -34)
 	desc:SetText(L.NoEffectUntilRL)
 
+	local enable = createCheckButton(self, 'Enable', "enable", true)
+	enable:SetPoint('TOPLEFT', config, 'TOPLEFT', 20, -50)
+
 	local scale = createSlider(self, "Scale", "scale", false, .5, 1.5, 0.05)
-	scale:SetPoint('TOPLEFT', config, 'TOPLEFT', 20, -70)
+	scale:SetPoint('TOPLEFT', enable, 'TOPLEFT', -2, -43)
 	scale.GetFormattedText = function(self, value)
 		return format('%d%%', value * 100)
 	end
