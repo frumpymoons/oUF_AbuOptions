@@ -403,13 +403,19 @@ function textures:Create()
 	backdColor:SetPoint('TOPLEFT', szColor, 'BOTTOMLEFT', 0, -10)
 	backdColor:SetText(L['Color_Backdrop'])
 
+	local borderTex = createDropDown(self, 'Texture_Border', 'borderType', true,
+		{	{ value = 'abu', text = "Abu" },
+			{ value = 'neal', text = "Neal" }
+	}, 180)
+	borderTex:SetPoint('TOPLEFT', nameText, 'TOPRIGHT', 70, 0)
+
 	local hpBar = createDropdownWithColorSelector(self, 'Color_HealthBar', 'healthcolormode', 'healthcolor', update.Healthbars, 
 		{
 			{ value = 'NORMAL', text = L['Color_Gradient'], tooltip = L['Color_GradientTip'] },
 			{ value = 'CLASS', 	text = L['Color_Class'], 	tooltip = L['Color_ClassTip'] },
 			{ value = 'CUSTOM', text = L['Color_Custom'], 	tooltip = L['Color_CustomTip'] },
 		})
-	hpBar:SetPoint('TOPLEFT', hpText, 'TOPRIGHT', 70, 0)
+	hpBar:SetPoint('TOPLEFT', borderTex, 'BOTTOMLEFT', 0, -GAP)
 	local mpBar = createDropdownWithColorSelector(self, 'Color_PowerBar', 'powercolormode', 'powercolor', update.Powerbars, 
 		{
 		{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
