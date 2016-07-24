@@ -1,4 +1,4 @@
-## Interface: 60200
+## Interface: 70000
 ## Author: Abu
 ## Title: oUF_|cffffffffAbu|rOptions
 ## Notes: Option Panel for oUF_Abu.
