@@ -225,7 +225,6 @@ function general:Create(  )
 	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
 
 	for k, v in pairs(GET(class)) do
-		assert(L['General_'..k], string.format('Missing localization: %s', 'General_'..k))
 		local button = ns.Widgets.CheckButton(self, L['General_'..k])
 		button.db = class
 		button.db2 = k
