@@ -4,12 +4,19 @@ local L = oUFAbu.localization
 local options = _G['oUF_AbuOptions']
 local optionsName = options:GetName()
 
-local function GET(db)
+local function GET(db, db2)
+	if db2 then 
+		return ns.settings[db][db2]
+	end
 	return ns.settings[db]
 end
 
-local function SET(db, value, reload)
-	ns.settings[db] = value
+local function SET(db, value, reload, db2)
+	if db2 then 
+		ns.settings[db][db2] = value
+	else
+		ns.settings[db] = value
+	end
 	if type(reload) == "function" then
 		reload()
 	elseif reload then
@@ -17,8 +24,12 @@ local function SET(db, value, reload)
 	end
 end
 
-local function RESET(db, reload)
-	ns.settings[db] = ns.defaultsettings[db]
+local function RESET(db, reload, db2)
+	if db2 then 
+		ns.settings[db][db2] = ns.defaultsettings[db][db2]
+	else
+		ns.settings[db] = ns.defaultsettings[db]
+	end
 	if type(reload) == "function" then
 		reload()
 	elseif reload then
@@ -213,29 +224,25 @@ function general:Create(  )
 	local classPortraits = createCheckButton(self, "General_ClassP", 'classPortraits')
 	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
 
-	-- Class buttons
-	local inital = #self.widgets
-	if type(GET(class)) == "boolean" then
-		createCheckButton(self, "General_ClassModule", class, true)
-	end
+	for k, v in pairs(GET(class)) do
+		assert(L['General_'..k], string.format('Missing localization: %s', 'General_'..k))
+		local button = ns.Widgets.CheckButton(self, L['General_'..k])
+		button.db = class
+		button.db2 = k
+		button.reload = true
+		button.tooltip = L['General_'..k..'Tip']
 
-	if class == "DRUID" or class == "DEATHKNIGHT" or class == "PALADIN" or class == "WARRIOR" or class == "MONK" then
-		createCheckButton(self, "General_Resolve", 'showVengeance', true)
-		if class == "WARRIOR" then
-			createCheckButton(self, "General_Enrage", 'showEnraged', true)
-		elseif class == "DRUID" then
-			createCheckButton(self, "General_Shrooms", 'showShrooms', true)
+		button.OnEnableSetting = function(self, enable)
+			SET(self.db, enable, self.reload, self.db2)
 		end
-	elseif class == "PRIEST" then
-		createCheckButton(self, "General_WSBar", 'showWeakenedSoul', true)
-	elseif class == "MAGE" then
-		createCheckButton(self, "General_Arcane", 'showArcStacks', true)
-	elseif class == "ROGUE" then
-		createCheckButton(self, "General_SnD", 'showSlicenDice', true)
-		createCheckButton(self, "General_Ant", 'showAnticipation', true)
-	end
 
-	for i = inital + 1, #self.widgets do
+		button.IsSettingEnabled = function(self)
+			return GET(self.db, self.db2)
+		end
+
+		table.insert(self.widgets, button)
+		local i = #self.widgets
+
 		self.widgets[i]:SetPoint('TOPLEFT', self.widgets[i-1], 'BOTTOMLEFT', 0, -CB_GAP)
 		self.widgets[i].Text:SetTextColor(color.r, color.g, color.b)
 	end
