@@ -223,6 +223,8 @@ function general:Create(  )
 	absorbBar:SetPoint('TOPRIGHT', -220, -138)
 	local classPortraits = createCheckButton(self, "General_ClassP", 'classPortraits')
 	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
+	local comboPoints = createCheckButton(self, "General_showComboPoints", 'showComboPoints')
+	comboPoints:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
 
 	for k, v in pairs(GET(class)) do
 		local button = ns.Widgets.CheckButton(self, L['General_'..k])
