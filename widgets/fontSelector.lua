@@ -46,7 +46,7 @@ local function createFontButton(parent, i)
 
 	local bg = b:CreateTexture(nil, 'BACKGROUND')
 	bg:SetAllPoints(b)
-	bg:SetTexture(.3, .3, .3, 0.6)
+	bg:SetColorTexture(.3, .3, .3, 0.6)
     b.bg = bg
 
 	local text = b:CreateFontString(nil, 'ARTWORK')
@@ -67,10 +67,10 @@ local function createFontButton(parent, i)
 	b:SetCheckedTexture(ct)
 
 	b:SetScript('OnEnter', function(self)
-		self.bg:SetTexture(1, 1, 1, 0.3)
+		self.bg:SetColorTexture(1, 1, 1, 0.3)
 	end)
 	b:SetScript('OnLeave', function(self)
-		self.bg:SetTexture(.3, .3, .3, 0.6)
+		self.bg:SetColorTexture(.3, .3, .3, 0.6)
 	end)
 	b:SetScript("OnClick", function(self)
 		local selector = self:GetParent()

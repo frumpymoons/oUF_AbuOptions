@@ -296,7 +296,7 @@ function ns.Widgets.ColorSelector(parent, hasOpacity)
 	local bg = f:CreateTexture(nil, 'BACKGROUND')
 	bg:SetWidth(16)
 	bg:SetHeight(16)
-	bg:SetTexture(1, 1, 1)
+	bg:SetColorTexture(1, 1, 1)
 	bg:SetPoint('CENTER')
 	f.bg = bg
 

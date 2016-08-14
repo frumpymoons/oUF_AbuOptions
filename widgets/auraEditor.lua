@@ -134,13 +134,13 @@ do
 		GameTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT")
 		GameTooltip:SetSpellByID(self.id)
 		GameTooltip:Show()
-		self.bg:SetTexture(1, 1, 1, 0.3)
+		self.bg:SetColorTexture(1, 1, 1, 0.3)
 	end
 
 	local function onLeave(self)
 		GameTooltip:Hide()
 		local color = (self.index % 2 == 0) and 0.3 or 0.2
-		self.bg:SetTexture(color, color, color, 0.6)
+		self.bg:SetColorTexture(color, color, color, 0.6)
 
 	end
 
