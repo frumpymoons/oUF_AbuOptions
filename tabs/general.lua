@@ -155,6 +155,133 @@ local function createDropdownWithColorSelector(parent, text, dropDB, colorDB, re
 	return dropdown
 end
 
+local function classAuraBar(parent)
+	local f = CreateFrame('Frame', parent:GetName()..'ClassAuraBar', parent)
+	f:SetSize(200,45)
+	f.tooltip = L["General_classAuraBarTip"]
+	f:SetScript('OnEnter', function(self)
+		if self.tooltip then
+			GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
+			GameTooltip:SetText(self.tooltip)
+		end
+	end)
+
+	f:SetScript('OnLeave', function(self)
+		if GameTooltip:IsOwned(self) then
+			GameTooltip:Hide()
+		end
+	end)
+
+	local icon = f:CreateTexture(nil, 'BACKGROUND')
+	icon:SetSize(20,20)
+	icon:SetPoint('TOPLEFT', f, 'TOPLEFT', 3, 0)
+	f.icon = icon
+
+	local text = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	text:SetPoint("BOTTOMLEFT", icon, "BOTTOMRIGHT", 5, 0)
+	text:SetPoint('TOPLEFT', icon, 'TOPRIGHT', 5, 0)
+	text:SetJustifyH("LEFT")
+	text:SetJustifyV("CENTER")
+	f.text = text
+
+	local colorpicker = ns.Widgets.ColorSelector(f, false)
+	colorpicker:SetPoint('BOTTOMLEFT', f, 'BOTTOMLEFT', 4, 3)
+	f.colorpicker = colorpicker
+
+	colorpicker.OnSetColor = function(self, r,g,b)
+		local t = ns.settings.classBar[self:GetParent().specId]
+		t.r, t.g, t.b = r, g, b
+		self:GetParent():SaveValue()
+	end
+
+	colorpicker.GetColor = function(self)
+		local t = ns.settings.classBar[self:GetParent().specId]
+		return t.r, t.g, t.b
+	end
+
+	local box = CreateFrame("EditBox", nil, f, 'InputBoxTemplate')
+	box:SetAutoFocus(false)
+	box:SetMaxLetters(6)
+	box:SetNumeric(true)	
+	box:SetWidth(70)
+	box:SetHeight(20)
+	box:SetPoint('BOTTOMLEFT', f.colorpicker, 'BOTTOMRIGHT', 7, -1)
+	box:SetCursorPosition(0)
+	f.box = box
+
+	box:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus()
+		local id = self:GetNumber()
+		if id and (id == 0 or GetSpellInfo(id)) then
+			ns.settings.classBar[self:GetParent().specId].spellID = id
+			self:GetParent():SaveValue()
+		else
+			self:SetNumber("")
+		end
+	end)
+
+	box:SetScript("OnEscapePressed", function(self)
+		self:ClearFocus()
+		self:SetText(ns.settings.classBar[self:GetParent().specId].spellID)
+	end)
+
+	local spelltext = f:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	spelltext:SetPoint('TOPLEFT', box, 'TOPRIGHT', 5, -4)
+	spelltext:SetJustifyH("LEFT")
+	spelltext:SetJustifyV("TOP")
+	spelltext:SetWidth(150)
+	f.spelltext = spelltext
+
+	f.SaveValue = function(self)
+		self:Update()
+		if oUF_AbuPlayer.Aurabar then
+			oUF_AbuPlayer.Aurabar:ForceUpdate()
+		end
+	end
+
+	f.Update = function(self)
+		local index = GetSpecialization()
+		if not index or not self:GetParent():IsVisible() then
+			return self:Hide()
+		end
+		self:Show()
+		local id, name, description, icon, background, role = GetSpecializationInfo(index)
+		self.icon:SetTexture(icon)
+		self.text:SetText(string.format(L["General_classAuraBar"], name))
+		self.specId = id
+
+		local _, class = UnitClass('player')
+		local color = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
+		self.text:SetTextColor(color.r, color.g, color.b)
+
+		if not ns.settings.classBar[self.specId] or type(ns.settings.classBar[self.specId]) ~= 'table' then
+			ns.settings.classBar[self.specId] = {spellID = 0, r = 0, g = 0, b = 0}
+		end
+
+		self.colorpicker:Update()
+		self.box:GetScript("OnEscapePressed")(self.box)
+
+
+		local spell = ns.settings.classBar[self.specId].spellID
+		if spell == 0 then
+			self.spelltext:SetText(ADDON_DISABLED)
+		else
+			local name, _, icon = GetSpellInfo(spell)
+			if name and icon then
+				self.spelltext:SetFormattedText("|T%s:0|t %s", icon, name)
+			else
+				self.spelltext:SetText("Invalid Spell") -- shouldnt happen
+			end
+		end
+	end
+
+	f:SetScript('OnEvent', f.Update)
+	f:RegisterEvent('PLAYER_TALENT_UPDATE')
+
+	table.insert(parent.widgets, f)
+	return f
+end
+
 --------------------------------------------------------
 --		BASIC PANEL
 local general = CreateFrame('Frame', optionsName..'_General', options)
@@ -225,6 +352,9 @@ function general:Create(  )
 	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
 	local comboPoints = createCheckButton(self, "General_showComboPoints", 'showComboPoints')
 	comboPoints:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
+
+	local asd = classAuraBar(self)
+	asd:SetPoint('TOPLEFT', comboPoints, 'BOTTOMLEFT', 0, -CB_GAP)
 
 	for k, v in pairs(GET(class)) do
 		local button = ns.Widgets.CheckButton(self, L['General_'..k])
