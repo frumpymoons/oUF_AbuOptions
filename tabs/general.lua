@@ -42,6 +42,7 @@ end
 local function createDropDown(parent, text, db, reload, items, width)
 	width = tonumber(width) or 150
 	local f = ns.Widgets.Dropdown(parent, L[text], width, items)
+	--UIDropDownMenu_JustifyText(f, "LEFT");
 	f.db = db
 	f.reload = reload
 	f.tooltip = L[text..'Tip']
@@ -349,12 +350,17 @@ function general:Create(  )
 	local absorbBar = createCheckButton(self, "General_Absorb", 'absorbBar', true)
 	absorbBar:SetPoint('TOPRIGHT', -220, -138)
 	local classPortraits = createCheckButton(self, "General_ClassP", 'classPortraits')
-	classPortraits:SetPoint('TOPLEFT', absorbBar, 'BOTTOMLEFT', 0, -CB_GAP)
+	classPortraits:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
 	local comboPoints = createCheckButton(self, "General_showComboPoints", 'showComboPoints')
-	comboPoints:SetPoint('TOPLEFT', classPortraits, 'BOTTOMLEFT', 0, -CB_GAP)
+	comboPoints:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
+
+	local powerPredictionBar = createCheckButton(self, "General_powerPredictionBar", 'powerPredictionBar')
+	powerPredictionBar:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
+	local builderSpender = createCheckButton(self, "General_builderSpender", 'builderSpender')
+	builderSpender:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
 
 	local asd = classAuraBar(self)
-	asd:SetPoint('TOPLEFT', comboPoints, 'BOTTOMLEFT', 0, -CB_GAP)
+	asd:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
 
 	for k, v in pairs(GET(class)) do
 		local button = ns.Widgets.CheckButton(self, L['General_'..k])
@@ -400,7 +406,7 @@ local update = {
 		local r, g, b = unpack(GET("healthcolor"))
 		for _, v in pairs(oUF.objects) do
 			local hp = v.Health
-			if (hp) then
+			if hp and v.style == "oUF_Abu" then
 				hp.colorClass = mode == 'CLASS'
 				hp.colorReaction = mode == 'CLASS'
 				hp.colorSmooth = mode == 'NORMAL'
@@ -415,12 +421,15 @@ local update = {
 	end,
 	Powerbars = function()
 		local mode = GET("powercolormode")
+		local useAtlas = GET("powerUseAtlas")
 		local r, g, b = unpack(GET("powercolor"))
 		for _, v in ipairs(oUF.objects) do
 			local mp = v.Power
-			if (mp) then
+			if (mp and v.style == "oUF_Abu") then
+				mp.useAtlas = useAtlas
 				mp.colorClass = mode == 'CLASS'
 				mp.colorPower = mode == 'TYPE'
+
 				if mode == 'CUSTOM' then
 					mp:SetStatusBarColor(r, g, b)
 				else
@@ -562,6 +571,8 @@ function textures:Create()
 	})
 	mpBar:SetPoint('TOPLEFT', hpBar, 'BOTTOMLEFT', 0, -GAP)
 
+	local useAtlas = createCheckButton(self, "General_useAtlas", 'powerUseAtlas', update.Powerbars)
+	useAtlas:SetPoint('TOPLEFT', mpBar, 'BOTTOMLEFT', 20, -5)
 end
 
 function textures:Update()

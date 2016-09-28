@@ -120,7 +120,7 @@ function ns.Widgets.Dropdown(parent, name, width, items)
      		local info = UIDropDownMenu_CreateInfo();
 			info.text = item.text or item.value
 			info.checked = (saved == item.value)
-			info.minWidth = width
+			--info.minWidth = width doesnt really work
 			info.func = function()
 				self:SetSavedValue(item.value)
 				self:Update()
@@ -131,7 +131,6 @@ function ns.Widgets.Dropdown(parent, name, width, items)
 				info.tooltipText = item.tooltip
 				info.tooltipOnButton = true
 			end
-
 			UIDropDownMenu_AddButton(info)
 		end
 	end
