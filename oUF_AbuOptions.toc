@@ -9,7 +9,6 @@
 widgets\widgets.xml
 
 mainpanels.lua
-aurapanels.lua
 
 tabs\auras.lua
 tabs\general.lua
