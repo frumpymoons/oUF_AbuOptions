@@ -1,9 +1,9 @@
-## Interface: 70000
+## Interface: 80000
 ## Author: Abu
 ## Title: oUF_|cffffffffAbu|rOptions
 ## Notes: Option Panel for oUF_Abu.
 ## Dependencies: oUF_Abu
-## Version: 7.0-5
+## Version: 8.0-1
 ## LoadOnDemand: 1
 
 widgets\widgets.xml
