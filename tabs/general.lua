@@ -331,6 +331,8 @@ function general:Create(  )
 	useAuraTimer:SetPoint('TOPLEFT', colorDebuff, 'BOTTOMLEFT', 0, -CB_GAP)
 	local clickThrough = createCheckButton(self, "General_Click", 'clickThrough', oUFAbu.UpdateBaseFrames)
 	clickThrough:SetPoint('TOPLEFT', useAuraTimer, 'BOTTOMLEFT', 0, -CB_GAP)
+	local combatFade = createCheckButton(self, "General_FadeFramesInCombat", 'combatFade', oUFAbu.UpdateBaseFrames)
+	combatFade:SetPoint('TOPLEFT', clickThrough, 'BOTTOMLEFT', 0, -CB_GAP)
 
 	--LEFT
 	local focMod = createDropDown(self, "General_ModKey", 'focMod', true,
