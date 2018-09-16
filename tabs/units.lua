@@ -245,6 +245,12 @@ function panel:Create()
 	function cpypos:GetSavedValue()
 		return GET(self.db)[2]
 	end
+	
+	local cbscale = createSlider(self, 'Scale', 'cbscale', true, .5, 1.5, 0.05)
+	cbscale:SetPoint('TOPLEFT', cpypos, 'TOPLEFT', 0, -35)
+	cbscale.GetFormattedText = function(self, value)
+		return format('%d%%', value * 100)
+	end
 end
 
 function panel:Update()
