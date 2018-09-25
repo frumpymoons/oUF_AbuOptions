@@ -349,10 +349,10 @@ function general:Create(  )
 	})
 	focBut:SetPoint("TOPLEFT", focMod, "BOTTOMLEFT", 0, -20)
 
-	local absorbBar = createCheckButton(self, "General_Absorb", 'absorbBar', true)
-	absorbBar:SetPoint('TOPRIGHT', -220, -138)
+	--local absorbBar = createCheckButton(self, "General_Absorb", 'absorbBar', true)
+	--absorbBar:SetPoint('TOPRIGHT', -220, -138)
 	local classPortraits = createCheckButton(self, "General_ClassP", 'classPortraits')
-	classPortraits:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
+	classPortraits:SetPoint('TOPRIGHT', -220, -138)
 	local comboPoints = createCheckButton(self, "General_showComboPoints", 'showComboPoints', function() oUFAbu:UpdateBaseFrames('player') end)
 	comboPoints:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
 
