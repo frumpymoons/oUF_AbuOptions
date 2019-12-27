@@ -45,7 +45,7 @@ local function addTab(self, name, panel)
 
 	t.sr = t:CreateTexture(nil, 'BACKGROUND')
 	t.sr:SetTexture([[Interface\OptionsFrame\UI-OptionsFrame-Spacer]])
-	t.sr:SetPoint('BOTTOMLEFT', t, 'BOTTOMRIGHT', -11, -6)
+	t.sr:SetPoint('BOTTOMLEFT', t, 'BOTTOMRIGHT', -11, -7)
 	t.sr:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -16, -(34 + t:GetHeight() + 7))
 
 	--place the new tab
