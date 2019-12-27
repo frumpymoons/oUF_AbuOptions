@@ -403,6 +403,9 @@ local update = {
 	PlayerTexture = function()
 		return oUFAbu:UpdateBaseFrames("player")
 	end,
+	Text = function()
+		return oUFAbu:UpdateBaseFrames()
+	end,
 	Healthbars = function()
 		local mode = GET("healthcolormode")
 		local r, g, b = unpack(GET("healthcolor"))
@@ -622,14 +625,20 @@ function fonts:Create()
 
 	local normalfont = createselector(self, "Font_Number", 'fontNormal')
 	normalfont:SetPoint('TOPLEFT', self, 'TOPLEFT', 12, -20)
-	normalfont:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -12, -200)
+	normalfont:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -24, -200)
 
 	local normaloutline = createDropDown(self, "Font_NumberOutline", 'fontNormalOutline', oUFAbu.SetAllFonts, outlines, 180)
-	normaloutline:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 32, -20)
+	normaloutline:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 0, -20)
 
 	local normalSize = createSlider(self, "Font_NumberSize", 'fontNormalSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
-	normalSize:SetPoint('LEFT', normaloutline, 'RIGHT', 40, 0)
+	normalSize:SetPoint('LEFT', normaloutline, 'RIGHT', 8, 0)
 	normalSize.GetFormattedText = slider_GetFormattedText
+
+	local normalOffset = createSlider(self, "Font_NumberOffset", 'fontNormalOffset', update.Text, -20, 20, 1)
+	normalOffset:SetPoint('LEFT', normalSize, 'RIGHT', 32, 12)
+
+	local powerOffset = createSlider(self, "Font_PowerOffset", 'fontPowerOffset', update.Text, -20, 20, 1)
+	powerOffset:SetPoint('TOP', normalOffset, 'BOTTOM', 0, -16)
 
 	local bigfont = createselector(self, "Font_Name", 'fontBig')
 	bigfont:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 0, -65)
@@ -641,7 +650,6 @@ function fonts:Create()
 	local bigSize = createSlider(self, "Font_NameSize", 'fontBigSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
 	bigSize:SetPoint('LEFT', bigoutline, 'RIGHT', 40, 0)
 	bigSize.GetFormattedText = slider_GetFormattedText
-
 end
 
 function fonts:Update()
