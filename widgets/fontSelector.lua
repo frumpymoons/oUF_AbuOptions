@@ -15,7 +15,7 @@ local FONT_HEIGHT = 22
 local BUTTON_HEIGHT, BUTTON_PADDING = 52, 2
 local ROW_HEIGHT = BUTTON_HEIGHT + BUTTON_PADDING
 local SCROLLFRAME_BORDER_SPACING, SCROLLBAR_WIDTH  = 8, 20
-local NUM_COLUMNS = 2
+local NUM_COLUMNS = 1
 
 local function getFontIDs()
 	return LSM:List(LSM_FONT)
@@ -109,13 +109,10 @@ function ns.Widgets.FontSelector(parent, title)
 
 		if i == 1 then
 			button:SetPoint('TOPLEFT', scrollFrame)
-			button:SetPoint('TOPRIGHT', scrollFrame, 'TOP', -(bar:GetWidth() + SCROLLFRAME_BORDER_SPACING + BUTTON_PADDING)/2, 0)
-		elseif i == 2 then
-			button:SetPoint('TOPLEFT', f.buttons[1], 'TOPRIGHT', BUTTON_PADDING, 0)
 			button:SetPoint('TOPRIGHT', scrollFrame, 'TOPRIGHT', -(bar:GetWidth() + SCROLLFRAME_BORDER_SPACING + BUTTON_PADDING), 0)
 		else
-			button:SetPoint('TOPLEFT', f.buttons[i-2], 'BOTTOMLEFT', 0, -BUTTON_PADDING)
-			button:SetPoint('TOPRIGHT', f.buttons[i-2], 'BOTTOMRIGHT', 0, -BUTTON_PADDING)
+			button:SetPoint('TOPLEFT', f.buttons[i-1], 'BOTTOMLEFT', 0, -BUTTON_PADDING)
+			button:SetPoint('TOPRIGHT', f.buttons[i-1], 'BOTTOMRIGHT', 0, -BUTTON_PADDING)
 		end
 
 		rawset(t, i, button)
@@ -133,8 +130,8 @@ function ns.Widgets.FontSelector(parent, title)
 		self.lastOffset = offset
 
 		local selected = self:GetSavedValue() 
-		for i = 1, (self.maxRows*2) do
-			local itemIndex = i + (offset * 2)
+		for i = 1, (self.maxRows*NUM_COLUMNS) do
+			local itemIndex = i + (offset * NUM_COLUMNS)
 			if itemIndex <= #items then
 				local button = self.buttons[i]
 				button.fontText:SetFont(items[itemIndex].font, FONT_HEIGHT, 'OUTLINE')

@@ -39,9 +39,9 @@ end
 
 ------------------------------------------------------------
 
-local function createDropDown(parent, text, db, reload, items, width)
+local function createDropDown(parent, anchor, text, db, reload, items, width)
 	width = tonumber(width) or 150
-	local f = ns.Widgets.Dropdown(parent, L[text], width, items)
+	local f = ns.Widgets.Dropdown(anchor, L[text], width, items)
 	--UIDropDownMenu_JustifyText(f, "LEFT");
 	f.db = db
 	f.reload = reload
@@ -77,8 +77,8 @@ local function createCheckButton(parent, text, db, reload)
 	return f
 end
 
-local function createSlider(parent, text, db, reload, lo, hi, step)
-	local f = ns.Widgets.Slider(parent, L[text], lo, hi, step)
+local function createSlider(parent, anchor, text, db, reload, lo, hi, step)
+	local f = ns.Widgets.Slider(anchor, L[text], lo, hi, step)
 	f.db = db
 	f.reload = reload
 	f.tooltip = L[text..'Tip']
@@ -137,7 +137,7 @@ local function createColorSelector(parent, db, reload, hasOpacity, hasResetButto
 end
 
 local function createDropdownWithColorSelector(parent, text, dropDB, colorDB, reload, items)
-	local dropdown = createDropDown(parent, text, dropDB, reload, items, 180)
+	local dropdown = createDropDown(parent, parent, text, dropDB, reload, items, 180)
 
 	local color = createColorSelector(parent, colorDB, reload)
 	color:SetPoint('TOPLEFT', dropdown, 'TOPRIGHT', -5, -4)
@@ -335,13 +335,13 @@ function general:Create(  )
 	combatFade:SetPoint('TOPLEFT', clickThrough, 'BOTTOMLEFT', 0, -CB_GAP)
 
 	--LEFT
-	local focMod = createDropDown(self, "General_ModKey", 'focMod', true,
+	local focMod = createDropDown(self, self, "General_ModKey", 'focMod', true,
 		{	{ value = 'shift-', text = SHIFT_KEY },
 			{ value = 'ctrl-', text = CTRL_KEY },
 			{ value = 'alt-', text = ALT_KEY }
 	})
 	focMod:SetPoint("TOPLEFT", self, "TOPRIGHT", -265, -38)
-	local focBut = createDropDown(self, "General_ModButton", 'focBut', true,
+	local focBut = createDropDown(self, self, "General_ModButton", 'focBut', true,
 		{	{ value = 'NONE', text = DISABLE },
 			{ value = '1', text = KEY_BUTTON1 },
 			{ value = '2', text = KEY_BUTTON2 },
@@ -480,7 +480,7 @@ function textures:Create()
 	--		player texture
 	local playerTexture
 	do
-		playerTexture = createDropDown(self, "Texture_Player", 'playerStyle', update.PlayerTexture,
+		playerTexture = createDropDown(self, self, "Texture_Player", 'playerStyle', update.PlayerTexture,
 			{	{ value = 'normal', 	text = L['Texture_Normal'], 	tooltip = L['Texture_NormalTip'] },
 				{ value = 'rare', 		text = L['Texture_Rare'], 		tooltip = L['Texture_RareTip'] },
 				{ value = 'elite', 		text = L['Texture_Elite'], 		tooltip = L['Texture_EliteTip'] },
@@ -555,7 +555,7 @@ function textures:Create()
 	backdColor:SetPoint('TOPLEFT', szColor, 'BOTTOMLEFT', 0, -10)
 	backdColor:SetText(L['Color_Backdrop'])
 
-	local borderTex = createDropDown(self, 'Texture_Border', 'borderType', true,
+	local borderTex = createDropDown(self, self, 'Texture_Border', 'borderType', true,
 		{	{ value = 'abu', text = "Abu" },
 			{ value = 'neal', text = "Neal" }
 	}, 180)
@@ -593,11 +593,25 @@ options:AddTab(L.Texture, textures)
 
 local fonts = CreateFrame('Frame', optionsName..'_Fonts', options)
 
+local dim = _G[optionsName..'_PanelArea']
+fonts.scrollFrame = CreateFrame('ScrollFrame',optionsName..'_FontsScrollFrame',fonts,'UIPanelScrollFrameTemplate')
+fonts.scrollFrame:ClearAllPoints()
+fonts.scrollFrame:SetPoint('TOPLEFT', dim, 4, -4)
+fonts.scrollFrame:SetPoint('BOTTOMRIGHT', dim, -4, 4)
+
+fonts.scrollFrame.child = CreateFrame('Frame', optionsName..'_FontsScrollFrameChild', fonts.scrollFrame)
+fonts.scrollFrame.child:SetSize(fonts.scrollFrame:GetWidth(), 700)
+fonts.scrollFrame:SetScrollChild(fonts.scrollFrame.child)
+
+fonts.scrollFrame.ScrollBar:SetPoint('TOPLEFT', fonts.scrollFrame, 'TOPRIGHT', -16, -16)
+fonts.scrollFrame.ScrollBar:SetPoint('BOTTOMLEFT', fonts.scrollFrame, 'BOTTOMRIGHT', -16, 16)
+fonts.scrollFrame.ScrollBar.scrollStep = 20
+
 function fonts:Create()
 	self.widgets = { }
 
 	local function createselector(self, name, db)
-		local f = ns.Widgets.FontSelector(self, L[name])
+		local f = ns.Widgets.FontSelector(fonts.scrollFrame.child, L[name])
 		f.db = db
 		f.reload = oUFAbu.SetAllFonts
 
@@ -614,42 +628,62 @@ function fonts:Create()
 
 	local outlines = {
 		{ value = 'NONE', text = NONE },
-		{ value = 'THINOUTLINE', text = L['Font_ThinOutline'] },
 		{ value = 'OUTLINE', text = L['Font_Outline'] },
-		{ value = 'THICKOUTLINE', text = L['Font_ThickOutline'] },
 		{ value = 'OUTLINEMONOCHROME', text = L['Font_OutlineMono'] },
 	}
 	local function slider_GetFormattedText(self, value)
 		return string.format('%d%%', value * 100)
 	end
 
-	local normalfont = createselector(self, "Font_Number", 'fontNormal')
-	normalfont:SetPoint('TOPLEFT', self, 'TOPLEFT', 12, -20)
-	normalfont:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -24, -200)
+	local numberFont = createselector(self, "Font_Number", 'fontNumber')
+	numberFont:SetPoint('TOPLEFT', fonts.scrollFrame.child, 'TOPLEFT', 12, -20)
+	numberFont:SetPoint('BOTTOMRIGHT', fonts.scrollFrame.child, 'TOP', -8, -200)
 
-	local normaloutline = createDropDown(self, "Font_NumberOutline", 'fontNormalOutline', oUFAbu.SetAllFonts, outlines, 180)
-	normaloutline:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 0, -20)
+	local numberOutline = createDropDown(self, fonts.scrollFrame.child, "Font_NumberOutline", 'fontNumberOutline', oUFAbu.SetAllFonts, outlines, 180)
+	numberOutline:SetPoint('TOPLEFT', numberFont, 'TOPRIGHT', 18, -20)
 
-	local normalSize = createSlider(self, "Font_NumberSize", 'fontNormalSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
-	normalSize:SetPoint('LEFT', normaloutline, 'RIGHT', 8, 0)
-	normalSize.GetFormattedText = slider_GetFormattedText
+	local numberSize = createSlider(self, fonts.scrollFrame.child, "Font_NumberSize", 'fontNumberSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
+	numberSize:SetPoint('TOP', numberOutline, 'BOTTOM', 0, -18)
+	numberSize.GetFormattedText = slider_GetFormattedText
 
-	local normalOffset = createSlider(self, "Font_NumberOffset", 'fontNormalOffset', update.Text, -20, 20, 1)
-	normalOffset:SetPoint('LEFT', normalSize, 'RIGHT', 32, 12)
+	local healthOffset = createSlider(self, fonts.scrollFrame.child, "Font_HealthOffset", 'fontHealthOffset', update.Text, -20, 20, 1)
+	healthOffset:SetPoint('TOP', numberSize, 'BOTTOM', 0, -22)
 
-	local powerOffset = createSlider(self, "Font_PowerOffset", 'fontPowerOffset', update.Text, -20, 20, 1)
-	powerOffset:SetPoint('TOP', normalOffset, 'BOTTOM', 0, -16)
+	local powerOffset = createSlider(self, fonts.scrollFrame.child, "Font_PowerOffset", 'fontPowerOffset', update.Text, -20, 20, 1)
+	powerOffset:SetPoint('TOP', healthOffset, 'BOTTOM', 0, -22)
 
-	local bigfont = createselector(self, "Font_Name", 'fontBig')
-	bigfont:SetPoint('TOPLEFT', normalfont, 'BOTTOMLEFT', 0, -65)
-	bigfont:SetPoint('BOTTOMRIGHT', normalfont, 'BOTTOMRIGHT', 0, -245)
+	local nameFont = createselector(self, "Font_Name", 'fontName')
+	nameFont:SetPoint('TOPLEFT', numberFont, 'BOTTOMLEFT', 0, -30)
+	nameFont:SetPoint('BOTTOMRIGHT', numberFont, 'BOTTOMRIGHT', 0, -210)
 
-	local bigoutline = createDropDown(self, "Font_NameOutline", 'fontBigOutline', oUFAbu.SetAllFonts, outlines, 180)
-	bigoutline:SetPoint('TOPLEFT', bigfont, 'BOTTOMLEFT', 32, -20)
+	local nameOutline = createDropDown(self, fonts.scrollFrame.child, "Font_NameOutline", 'fontNameOutline', oUFAbu.SetAllFonts, outlines, 180)
+	nameOutline:SetPoint('TOPLEFT', nameFont, 'TOPRIGHT', 18, -20)
 
-	local bigSize = createSlider(self, "Font_NameSize", 'fontBigSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
-	bigSize:SetPoint('LEFT', bigoutline, 'RIGHT', 40, 0)
-	bigSize.GetFormattedText = slider_GetFormattedText
+	local nameSize = createSlider(self, fonts.scrollFrame.child, "Font_NameSize", 'fontNameSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
+	nameSize:SetPoint('TOP', nameOutline, 'BOTTOM', 0, -18)
+	nameSize.GetFormattedText = slider_GetFormattedText
+
+	local barFont = createselector(self, "Font_Bar", 'fontBar')
+	barFont:SetPoint('TOPLEFT', nameFont, 'BOTTOMLEFT', 0, -30)
+	barFont:SetPoint('BOTTOMRIGHT', nameFont, 'BOTTOMRIGHT', 0, -210)
+
+	local barOutline = createDropDown(self, fonts.scrollFrame.child, "Font_BarOutline", 'fontBarOutline', oUFAbu.SetAllFonts, outlines, 180)
+	barOutline:SetPoint('TOPLEFT', barFont, 'TOPRIGHT', 18, -20)
+
+	local barSize = createSlider(self, fonts.scrollFrame.child, "Font_BarSize", 'fontBarSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
+	barSize:SetPoint('TOP', barOutline, 'BOTTOM', 0, -18)
+	barSize.GetFormattedText = slider_GetFormattedText
+
+	-- local levelFont = createselector(self, "Font_Level", 'fontLevel')
+	-- levelFont:SetPoint('TOPLEFT', nameFont, 'BOTTOMLEFT', 0, -65)
+	-- levelFont:SetPoint('BOTTOMRIGHT', nameFont, 'BOTTOMRIGHT', 0, -245)
+
+	-- local levelOutline = createDropDown(self, fonts, "Font_LevelOutline", 'fontLevelOutline', oUFAbu.SetAllFonts, outlines, 180)
+	-- levelOutline:SetPoint('TOPLEFT', levelFont, 'BOTTOMLEFT', 32, -20)
+
+	-- local levelSize = createSlider(self, fonts, "Font_LevelSize", 'fontLevelSize', oUFAbu.SetAllFonts, .5, 1.5, .05)
+	-- levelSize:SetPoint('LEFT', levelOutline, 'RIGHT', 40, 0)
+	-- levelSize.GetFormattedText = slider_GetFormattedText
 end
 
 function fonts:Update()
