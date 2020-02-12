@@ -595,22 +595,22 @@ options:AddTab(L.Texture, textures)
 
 local fonts = CreateFrame('Frame', optionsName..'_Fonts', options)
 
-local dim = _G[optionsName..'_PanelArea']
-fonts.scrollFrame = CreateFrame('ScrollFrame',optionsName..'_FontsScrollFrame',fonts,'UIPanelScrollFrameTemplate')
-fonts.scrollFrame:ClearAllPoints()
-fonts.scrollFrame:SetPoint('TOPLEFT', dim, 4, -4)
-fonts.scrollFrame:SetPoint('BOTTOMRIGHT', dim, -4, 4)
-
-fonts.scrollFrame.child = CreateFrame('Frame', optionsName..'_FontsScrollFrameChild', fonts.scrollFrame)
-fonts.scrollFrame.child:SetSize(fonts.scrollFrame:GetWidth(), 700)
-fonts.scrollFrame:SetScrollChild(fonts.scrollFrame.child)
-
-fonts.scrollFrame.ScrollBar:SetPoint('TOPLEFT', fonts.scrollFrame, 'TOPRIGHT', -16, -16)
-fonts.scrollFrame.ScrollBar:SetPoint('BOTTOMLEFT', fonts.scrollFrame, 'BOTTOMRIGHT', -16, 16)
-fonts.scrollFrame.ScrollBar.scrollStep = 20
-
 function fonts:Create()
 	self.widgets = { }
+
+	local dim = _G[optionsName..'_PanelArea']
+	fonts.scrollFrame = CreateFrame('ScrollFrame',optionsName..'_FontsScrollFrame',fonts,'UIPanelScrollFrameTemplate')
+	fonts.scrollFrame:ClearAllPoints()
+	fonts.scrollFrame:SetPoint('TOPLEFT', dim, 4, -4)
+	fonts.scrollFrame:SetPoint('BOTTOMRIGHT', dim, -4, 4)
+
+	fonts.scrollFrame.child = CreateFrame('Frame', optionsName..'_FontsScrollFrameChild', fonts.scrollFrame)
+	fonts.scrollFrame.child:SetSize(fonts.scrollFrame:GetWidth(), 700)
+	fonts.scrollFrame:SetScrollChild(fonts.scrollFrame.child)
+
+	fonts.scrollFrame.ScrollBar:SetPoint('TOPLEFT', fonts.scrollFrame, 'TOPRIGHT', -16, -16)
+	fonts.scrollFrame.ScrollBar:SetPoint('BOTTOMLEFT', fonts.scrollFrame, 'BOTTOMRIGHT', -16, 16)
+	fonts.scrollFrame.ScrollBar.scrollStep = 20
 
 	local function createselector(self, name, db)
 		local f = ns.Widgets.FontSelector(fonts.scrollFrame.child, L[name])
