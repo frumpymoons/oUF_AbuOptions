@@ -2,7 +2,7 @@ local _, ns = ...
 
 ns.defaultsettings = oUFAbu:GetDefaultSettings()
 ns.settings = oUFAbu:GetSettings()
-
+ns.Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local L = oUFAbu.localization
 -----------------------------------------------------------------------------
 -- Build frames
