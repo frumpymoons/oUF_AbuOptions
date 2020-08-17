@@ -562,8 +562,8 @@ function textures:Create()
 	local borderTex = createDropDown(self, self, 'Texture_Border', 'borderType', true,
 		{	{ value = 'abu', text = "Abu" },
 			{ value = 'neal', text = "Neal" }
-	}, 180)
-	borderTex:SetPoint('TOPLEFT', nameText, 'TOPRIGHT', 70, 0)
+		}, 180)
+	borderTex:SetPoint('TOPLEFT', playerTexture, 'TOPRIGHT', 70, 0)
 
 	local hpBar = createDropdownWithColorSelector(self, 'Color_HealthBar', 'healthcolormode', 'healthcolor', update.Healthbars, 
 		{
@@ -574,14 +574,22 @@ function textures:Create()
 	hpBar:SetPoint('TOPLEFT', borderTex, 'BOTTOMLEFT', 0, -GAP)
 	local mpBar = createDropdownWithColorSelector(self, 'Color_PowerBar', 'powercolormode', 'powercolor', update.Powerbars, 
 		{
-		{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
-		{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },
-		{ value = 'CUSTOM', text = L['Color_Custom'], tooltip = L['Color_CustomTip'] },
-	})
+			{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
+			{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },
+			{ value = 'CUSTOM', text = L['Color_Custom'], tooltip = L['Color_CustomTip'] },
+		})
 	mpBar:SetPoint('TOPLEFT', hpBar, 'BOTTOMLEFT', 0, -GAP)
 
 	local useAtlas = createCheckButton(self, "General_useAtlas", 'powerUseAtlas', update.Powerbars)
 	useAtlas:SetPoint('TOPLEFT', mpBar, 'BOTTOMLEFT', 20, -5)
+
+	-- createColorSelector(parent, db, reload, hasOpacity, hasResetButton)
+	local unInterruptibleColor = createColorSelector(self, 'castbarUnInterruptibleColor', update.Framecolors, true, true)
+	unInterruptibleColor:SetPoint('TOPLEFT', frameColor, 'TOPRIGHT', 280, 0)
+	unInterruptibleColor:SetText(L['Color_UnInterruptible'])
+
+	-- local interruptibleColor = createColorSelector(self, 'castbarInterruptibleColor', update.Framecolors, true, true)
+	-- interruptibleColor:SetPoint('TOPLEFT', unInterruptibleColor, 'BOTTOMLEFT', 0, -GAP)
 end
 
 function textures:Update()
