@@ -13,7 +13,7 @@ local backdrop = {
 }
 
 function ns.Widgets.Group(parent, name, subtitle)
-	local f = CreateFrame('Frame', parent:GetName()..name, parent)
+	local f = CreateFrame('Frame', parent:GetName()..name, parent, BackdropTemplateMixin and 'BackdropTemplate')
 	f:SetBackdrop(backdrop)
 	f:SetBackdropBorderColor(0.4, 0.4, 0.4)
 	f:SetBackdropColor(0, 0, 0, 0.3)

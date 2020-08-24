@@ -71,7 +71,7 @@ local function createEditbox(parent)
 end
 
 local function createRow(parent)
-	local row = CreateFrame('Frame', nil, parent)
+	local row = CreateFrame('Frame', nil, parent, BackdropTemplateMixin and 'BackdropTemplate')
 	row:SetPoint('LEFT', 10, 0)
 	row:SetPoint('RIGHT', -10, 0)
 	row:SetHeight(HEIGHT)
@@ -145,7 +145,7 @@ function panel:Create()
 	--10 [name160] 40 [x100] 10 [y100] 10 [130]
 	-- Header with labels
 	do 
-		local header = CreateFrame('Frame', nil, self)
+		local header = CreateFrame('Frame', nil, self, BackdropTemplateMixin and 'BackdropTemplate')
 		header:SetPoint('TOPLEFT', 10, -20)
 		header:SetPoint('TOPRIGHT', -10, -20)
 		header:SetHeight(HEIGHT)
