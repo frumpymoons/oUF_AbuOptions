@@ -211,7 +211,7 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 		insets = {left = 4, right = 4, top = 4, bottom = 4}
 	}
 
-	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, 'FauxScrollFrameTemplate') -- including bar
+	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, BackdropTemplateMixin and "FauxScrollFrameTemplate, BackdropTemplate" or 'FauxScrollFrameTemplate') -- including bar
 	scrollFrame:SetPoint('TOPLEFT', editFrame, 'BOTTOMLEFT', 0, -4)
 	scrollFrame:SetPoint('BOTTOMRIGHT')
 	scrollFrame:SetScript('OnVerticalScroll', function(self, offset)
