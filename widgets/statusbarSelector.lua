@@ -11,7 +11,7 @@ local LSM_BAR = LSM.MediaType.STATUSBAR
 
 local BUTTON_HEIGHT, BUTTON_PADDING = 52, 2
 local ROW_HEIGHT = BUTTON_HEIGHT + BUTTON_PADDING
-local SCROLLFRAME_BORDER_SPACING, SCROLLBAR_WIDTH = 8, 20
+local SCROLLFRAME_BORDER_SPACING = 8
 local NUM_COLUMNS = 2
 
 local function getStatusbarIDs()
@@ -86,7 +86,6 @@ function ns.Widgets.StatusbarSelector(parent, title)
 	f.scrollFrame = scrollFrame
 
 	local bar = scrollFrame.ScrollBar
-	local upbuttonHeight = 10
 	bar:ClearAllPoints()
 	bar:SetPoint('TOPRIGHT', scrollFrame, -4, -16)
 	bar:SetPoint('BOTTOMRIGHT', scrollFrame, -4, 16)

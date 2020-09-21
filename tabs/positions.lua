@@ -6,11 +6,11 @@ local panel = CreateFrame('Frame', options:GetName()..'_Positions')
 local GAP, HEIGHT = 2, 32
 
 local BACKDROP = {
-  bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
-  edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
-  edgeSize = 16,
-  tile = true, tileSize = 16,
-  insets = {left = 4, right = 4, top = 4, bottom = 4}
+	bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
+	edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
+	edgeSize = 16,
+	tile = true, tileSize = 16,
+	insets = {left = 4, right = 4, top = 4, bottom = 4}
 }
 
 --------------------------------------------------
@@ -35,29 +35,29 @@ local function createEditbox(parent)
 	box:SetJustifyH('CENTER')
 	box:SetMaxLetters(6)
 
-	box:SetScript('OnEditFocusGained', function(self) 
+	box:SetScript('OnEditFocusGained', function(self)
 		self.old = self:GetText()
 		self.new = nil
 	end)
-	box:SetScript('OnEditFocusLost', function(self) 
+	box:SetScript('OnEditFocusLost', function(self)
 		local text = getInput(self)
 		self:SetText(string.format('%d', text))
 		self.old, self.new = nil, nil
 	end)
-	box:SetScript('OnEscapePressed', function(self) 
+	box:SetScript('OnEscapePressed', function(self)
 		self:SetText(self.old)
 		self:ClearFocus()
 	end)
-	box:SetScript('OnEnterPressed', function(self) 
+	box:SetScript('OnEnterPressed', function(self)
 		self:GetParent():Update()
 		self:ClearFocus()
 	end)
-	box:SetScript('OnTextChanged', function(self, userInput) 
+	box:SetScript('OnTextChanged', function(self, userInput)
 		if (not userInput) then return; end
 		self.new = self:GetText()
 		self:GetParent():Save()
 	end)
-	box:SetScript('OnChar', function(self, key) 
+	box:SetScript('OnChar', function(self, key)
 		local text = self:GetText()
 		if (not tonumber(text..'0')) or ((not tonumber(key)) and (key ~= '-')) then
 			local pos = self:GetCursorPosition() - 1
@@ -144,7 +144,7 @@ function panel:Create()
 	self.rows = {}
 	--10 [name160] 40 [x100] 10 [y100] 10 [130]
 	-- Header with labels
-	do 
+	do
 		local header = CreateFrame('Frame', nil, self, BackdropTemplateMixin and 'BackdropTemplate')
 		header:SetPoint('TOPLEFT', 10, -20)
 		header:SetPoint('TOPRIGHT', -10, -20)
@@ -187,9 +187,7 @@ function panel:Create()
 		local row = createRow(self)
 		row:SetPoint('TOPLEFT', self.rows[i-1], 'BOTTOMLEFT', 0, -GAP)
 		row.key1, row.key2 = frame.key1, frame.key2
-		
 		row.name:SetText(frame.objectname)
-
 		self.rows[i] = row
 	end
 

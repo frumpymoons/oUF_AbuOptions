@@ -42,7 +42,7 @@ do
 		text:SetText(L.Auras_EnterSpellID)
 		f.text = text
 
-		--create edit box 
+		--create edit box
 		local editBox = CreateFrame('EditBox', nil, f, 'InputBoxTemplate')
 		editBox:SetPoint('TOPLEFT', f, 'TOPLEFT', 18, -12)
 		editBox:SetPoint('BOTTOMRIGHT', f, 'BOTTOMRIGHT', -60, -12)
@@ -51,7 +51,7 @@ do
 		editBox:SetAutoFocus(false)
 		editBox:SetAltArrowKeyMode(false)
 		editBox:SetMaxLetters(6)
-		editBox:SetNumeric(true)	
+		editBox:SetNumeric(true)
 		f.editBox = editBox
 
 		f.GetValue = function(self)
@@ -211,7 +211,8 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 		insets = {left = 4, right = 4, top = 4, bottom = 4}
 	}
 
-	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, BackdropTemplateMixin and "FauxScrollFrameTemplate, BackdropTemplate" or 'FauxScrollFrameTemplate') -- including bar
+	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, BackdropTemplateMixin and "FauxScrollFrameTemplate, BackdropTemplate"
+										or 'FauxScrollFrameTemplate')
 	scrollFrame:SetPoint('TOPLEFT', editFrame, 'BOTTOMLEFT', 0, -4)
 	scrollFrame:SetPoint('BOTTOMRIGHT')
 	scrollFrame:SetScript('OnVerticalScroll', function(self, offset)
@@ -250,11 +251,9 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 	f.UpdateScroll = function(self, override)
 		local items = self.sortedItems
 		local scrollFrame = self.scrollFrame
-		-- what does the faux say
-		--FauxScrollFrame_Update(frame, numItems, numToDisplay, buttonHeight, button, smallWidth, bigWidth, highlightFrame, smallHighlightWidth, bigHighlightWidth, alwaysShowScrollBar )
 		FauxScrollFrame_Update(scrollFrame, #items, MAX_ROWS, ROW_HEIGHT, nil, nil, nil, nil, nil, nil, true )
 		local offset = FauxScrollFrame_GetOffset(scrollFrame)
-		
+
 		if (not override) and (self.lastOffset == offset) then
 			return; -- no need to update
 		end
@@ -282,7 +281,6 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 
 	f.Update = function(self)
 		local items = self:GetItems()
-		local menu = nil
 		self.sortedItems = self.sortedItems or {}
 		wipe(self.sortedItems)
 
@@ -304,11 +302,11 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 		self:Update()
 		self:UpdateEditFrame()
 	end
-	
+
 	f.CanAddItem = function(self)
 		local spell = self.editFrame:GetValue()
 		if (spell == 0) then return; end
-		
+
 		local name = GetSpellInfo(spell)
 		if (not name) then return; end
 

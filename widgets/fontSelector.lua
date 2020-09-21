@@ -14,8 +14,9 @@ local LSM_FONT = LSM.MediaType.FONT
 local FONT_HEIGHT = 22
 local BUTTON_HEIGHT, BUTTON_PADDING = 52, 2
 local ROW_HEIGHT = BUTTON_HEIGHT + BUTTON_PADDING
-local SCROLLFRAME_BORDER_SPACING, SCROLLBAR_WIDTH  = 8, 20
+local SCROLLFRAME_BORDER_SPACING = 8
 local NUM_COLUMNS = 1
+local PADDING = 0
 
 local function getFontIDs()
 	return LSM:List(LSM_FONT)
@@ -77,7 +78,7 @@ local function createFontButton(parent, i)
 		selector:SetSavedValue(selector.items[self.index].font)
 		selector:UpdateScroll(true)
 	end)
-	
+
 	return b
 end
 
@@ -99,7 +100,6 @@ function ns.Widgets.FontSelector(parent, title)
 	f.scrollFrame = scrollFrame
 
 	local bar = scrollFrame.ScrollBar
-	local upbuttonHeight = 10
 	bar:ClearAllPoints()
 	bar:SetPoint('TOPRIGHT', scrollFrame, -4, -16)
 	bar:SetPoint('BOTTOMRIGHT', scrollFrame, -4, 16)
@@ -129,14 +129,14 @@ function ns.Widgets.FontSelector(parent, title)
 		end
 		self.lastOffset = offset
 
-		local selected = self:GetSavedValue() 
+		local selected = self:GetSavedValue()
 		for i = 1, (self.maxRows*NUM_COLUMNS) do
 			local itemIndex = i + (offset * NUM_COLUMNS)
 			if itemIndex <= #items then
 				local button = self.buttons[i]
 				button.fontText:SetFont(items[itemIndex].font, FONT_HEIGHT, 'OUTLINE')
 				button.fontText:SetText('1234567890')
-				button:SetText(items[itemIndex].name)	
+				button:SetText(items[itemIndex].name)
 				button:SetChecked(items[itemIndex].font == selected)
 				button.index = itemIndex
 				button:Show()
@@ -153,7 +153,7 @@ function ns.Widgets.FontSelector(parent, title)
 
 		self.maxRows = math.floor(self.scrollFrame:GetHeight() / ROW_HEIGHT)
 		FauxScrollFrame_Update(self.scrollFrame, math.ceil(#self.items / NUM_COLUMNS), self.maxRows, ROW_HEIGHT, nil, nil, nil, nil, nil, nil, true )
-		
+
 		-- changing offset so we jump to selected item
 		local selected = self:GetSavedValue()
 		for i = 1, #self.items do

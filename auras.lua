@@ -29,7 +29,7 @@ do
 				oUF.objects[i]:UpdateAllElements("OptionsRefresh")
 			end
 		end
-		
+
 		editor:SetPoint('TOPLEFT', 12, -25)
 		editor:SetPoint('TOPRIGHT', -12, -25)
 		editor:SetHeight(472)
@@ -100,7 +100,7 @@ do
 				oUF.objects[i]:UpdateAllElements("OptionsRefresh")
 			end
 		end
-		
+
 		editor:SetPoint('TOPLEFT', 12, -25)
 		editor:SetPoint('TOPRIGHT', -12, -25)
 		editor:SetHeight(472)

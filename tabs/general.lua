@@ -5,14 +5,14 @@ local options = _G['oUF_AbuOptions']
 local optionsName = options:GetName()
 
 local function GET(db, db2)
-	if db2 then 
+	if db2 then
 		return ns.settings[db][db2]
 	end
 	return ns.settings[db]
 end
 
 local function SET(db, value, reload, db2)
-	if db2 then 
+	if db2 then
 		ns.settings[db][db2] = value
 	else
 		ns.settings[db] = value
@@ -25,7 +25,7 @@ local function SET(db, value, reload, db2)
 end
 
 local function RESET(db, reload, db2)
-	if db2 then 
+	if db2 then
 		ns.settings[db][db2] = ns.defaultsettings[db][db2]
 	else
 		ns.settings[db] = ns.defaultsettings[db]
@@ -203,7 +203,7 @@ local function classAuraBar(parent)
 	local box = CreateFrame("EditBox", nil, f, 'InputBoxTemplate')
 	box:SetAutoFocus(false)
 	box:SetMaxLetters(6)
-	box:SetNumeric(true)	
+	box:SetNumeric(true)
 	box:SetWidth(70)
 	box:SetHeight(20)
 	box:SetPoint('BOTTOMLEFT', f.colorpicker, 'BOTTOMRIGHT', 7, -1)
@@ -247,7 +247,7 @@ local function classAuraBar(parent)
 			return self:Hide()
 		end
 		self:Show()
-		local id, name, description, icon, background, role = GetSpecializationInfo(index)
+		local id, name, _, icon = GetSpecializationInfo(index)
 		self.icon:SetTexture(icon)
 		self.text:SetText(string.format(L["General_classAuraBar"], name))
 		self.specId = id
@@ -267,7 +267,7 @@ local function classAuraBar(parent)
 		if spell == 0 then
 			self.spelltext:SetText(ADDON_DISABLED)
 		else
-			local name, _, icon = GetSpellInfo(spell)
+			name, _, icon = GetSpellInfo(spell)
 			if name and icon then
 				self.spelltext:SetFormattedText("|T%s:0|t %s", icon, name)
 			else
@@ -290,7 +290,7 @@ end
 local general = CreateFrame('Frame', optionsName..'_General', options)
 
 function general:Create(  )
-	local _, class, classIndex = UnitClass('player')
+	local _, class = UnitClass('player')
 	local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 	local color = RAID_CLASS_COLORS[class]
 
@@ -368,7 +368,7 @@ function general:Create(  )
 	local asd = classAuraBar(self)
 	asd:SetPoint('TOPLEFT', self.widgets[#self.widgets-1], 'BOTTOMLEFT', 0, -CB_GAP)
 
-	for k, v in pairs(GET(class)) do
+	for k in pairs(GET(class)) do
 		local button = ns.Widgets.CheckButton(self, L['General_'..k])
 		button.db = class
 		button.db2 = k
@@ -447,7 +447,7 @@ local update = {
 			end
 		end
 	end,
-	
+
 	Safezone = function()
 		if oUF_AbuPlayerCastbar and oUF_AbuPlayerCastbar.SafeZone then
 			oUF_AbuPlayerCastbar.SafeZone:SetVertexColor(unpack(GET"castbarSafezoneColor"))
@@ -528,20 +528,20 @@ function textures:Create()
 	playerTexture:SetPoint('TOPLEFT', f, 'TOPLEFT', 6, -22)
 
 	local GAP = 14
-	local nameText = createDropdownWithColorSelector(self, 'Color_NameText', 'TextNameColorMode', 'TextNameColor', false, 
-		{	
+	local nameText = createDropdownWithColorSelector(self, 'Color_NameText', 'TextNameColorMode', 'TextNameColor', false,
+		{
 			{ value = 'CLASS', 	text = L['Color_Class'], 	tooltip = L['Color_ClassTip'] },
-			{ value = 'CUSTOM', text = L['Color_Custom'], 	tooltip = L['Color_CustomTip'] }, 
+			{ value = 'CUSTOM', text = L['Color_Custom'], 	tooltip = L['Color_CustomTip'] },
 		})
 	nameText:SetPoint('TOPLEFT', playerTexture, 'BOTTOMLEFT', 0, -GAP)
-	local hpText = createDropdownWithColorSelector(self, 'Color_HealthText', 'TextHealthColorMode', 'TextHealthColor', false, 
+	local hpText = createDropdownWithColorSelector(self, 'Color_HealthText', 'TextHealthColorMode', 'TextHealthColor', false,
 		{
 			{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },
 			{ value = 'GRADIENT', text = L['Color_Gradient'], tooltip = L['Color_GradientTip'] },
 			{ value = 'CUSTOM', text = L['Color_Custom'], tooltip = L['Color_CustomTip'] },
 		})
 	hpText:SetPoint('TOPLEFT', nameText, 'BOTTOMLEFT', 0, -GAP)
-	local mpText = createDropdownWithColorSelector(self, 'Color_PowerText', 'TextPowerColorMode', 'TextPowerColor', false, 
+	local mpText = createDropdownWithColorSelector(self, 'Color_PowerText', 'TextPowerColorMode', 'TextPowerColor', false,
 		{
 			{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },
 			{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
@@ -565,14 +565,14 @@ function textures:Create()
 		}, 180)
 	borderTex:SetPoint('TOPLEFT', playerTexture, 'TOPRIGHT', 70, 0)
 
-	local hpBar = createDropdownWithColorSelector(self, 'Color_HealthBar', 'healthcolormode', 'healthcolor', update.Healthbars, 
+	local hpBar = createDropdownWithColorSelector(self, 'Color_HealthBar', 'healthcolormode', 'healthcolor', update.Healthbars,
 		{
 			{ value = 'NORMAL', text = L['Color_Gradient'], tooltip = L['Color_GradientTip'] },
 			{ value = 'CLASS', 	text = L['Color_Class'], 	tooltip = L['Color_ClassTip'] },
 			{ value = 'CUSTOM', text = L['Color_Custom'], 	tooltip = L['Color_CustomTip'] },
 		})
 	hpBar:SetPoint('TOPLEFT', borderTex, 'BOTTOMLEFT', 0, -GAP)
-	local mpBar = createDropdownWithColorSelector(self, 'Color_PowerBar', 'powercolormode', 'powercolor', update.Powerbars, 
+	local mpBar = createDropdownWithColorSelector(self, 'Color_PowerBar', 'powercolormode', 'powercolor', update.Powerbars,
 		{
 			{ value = 'TYPE', text = L['Color_Power'], tooltip = L['Color_PowerTip'] },
 			{ value = 'CLASS', text = L['Color_Class'], tooltip = L['Color_ClassTip'] },

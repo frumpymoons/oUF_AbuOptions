@@ -20,7 +20,7 @@ local function addTab(self, name, panel)
 		PanelTemplates_UpdateTabs(parent)
 
 		--hide any visible panels/tabs
-		for i, tab in pairs(parent.tabs) do
+		for _, tab in pairs(parent.tabs) do
 			if tab ~= self then
 				tab.panel:Hide()
 				tab.sl:Hide()

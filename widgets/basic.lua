@@ -5,11 +5,11 @@ ns.Widgets = ns.Widgets or {}
 --		Group
 
 local backdrop = {
-  bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
-  edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
-  edgeSize = 16,
-  tile = true, tileSize = 16,
-  insets = {left = 4, right = 4, top = 4, bottom = 4}
+	bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
+	edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
+	edgeSize = 16,
+	tile = true, tileSize = 16,
+	insets = {left = 4, right = 4, top = 4, bottom = 4}
 }
 
 function ns.Widgets.Group(parent, name, subtitle)
@@ -117,7 +117,7 @@ function ns.Widgets.Dropdown(parent, name, width, items)
 		local saved = self:GetSavedValue()
 		for i = 1, #self.items do
 			local item = self.items[i]
-     		local info = UIDropDownMenu_CreateInfo();
+			local info = UIDropDownMenu_CreateInfo()
 			info.text = item.text or item.value
 			info.checked = (saved == item.value)
 			--info.minWidth = width doesnt really work
@@ -243,7 +243,7 @@ function ns.Widgets.Slider(parent, name, low, high, step)
 
 	function f:Update(value)
 		local value = value or self:GetSavedValue()
-		self.dontSaveValue = true 
+		self.dontSaveValue = true
 		self:SetValue(value)	-- only set the position of the slider
 		self.dontSaveValue = nil
 		if self.GetFormattedText then

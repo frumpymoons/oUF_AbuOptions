@@ -15,7 +15,7 @@ ns.Widgets.TabPanel( Aurafilter, Aurafilter.name)
 
 -----------------------------------------------------------------------------
 -- Build profile selector
-do 
+do
 	local dropdown = ns.Widgets.ProfileSelector( Options, function() return oUFAbu:GetProfileID(); end )
 
 	dropdown.OnSetProfile = function(self, id)
@@ -49,7 +49,7 @@ do
 		button2 = CANCEL,
 		hasEditBox = 1,
 		maxLetters = 24,
-		
+
 		OnAccept = function(self)
 			local name = _G[self:GetName()..'EditBox']:GetText()
 			if name ~= '' or name == oUFAbu.DEFAULT then
@@ -102,7 +102,7 @@ do
 		button2 = CANCEL,
 		hasEditBox = 1,
 		maxLetters = 24,
-		
+
 		OnAccept = function(self)
 			local name = _G[self:GetName()..'EditBox']:GetText()
 			if name ~= '' or name == oUFAbu.DEFAULT then
@@ -110,21 +110,21 @@ do
 				dropdown:Update()-- sets the new profile as current
 			end
 		end,
-		
+
 		OnShow = function(self)
 			_G[self:GetName()..'EditBox']:SetFocus()
 		end,
-		
+
 		OnHide = function(self)
 			_G[self:GetName()..'EditBox']:SetText('')
 		end,
-		
+
 		timeout = 0, exclusive = 1, hideOnEscape = 1, preferredIndex = STATICPOPUP_NUMDIALOGS
 	}
 end
 -----------------------------------------------------------------------------
 
-function Options.okay() 
+function Options.okay()
 	if (ns.reload == true) then
 		StaticPopup_Show("OUFABU_RELOADUIWARNING")
 		ns.reload = false

@@ -21,7 +21,7 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 		assert(false, 'Hey you forgot to implement OnDeleteProfile for ' .. self:GetName())
 	end
 
-	dd.GetAllProfiles = function()
+	dd.GetAllProfiles = function(self)
 		assert(false, 'Hey you forgot to implement GetAllProfiles for ' .. self:GetName())
 	end
 
@@ -90,7 +90,7 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 
 	local function init_levelOne(self, level, menuList)
 		local profiles = self:GetAllProfiles()
-		
+
 		--base group
 		local info = UIDropDownMenu_CreateInfo()
 		info.text = oUFAbu.DEFAULT
@@ -101,8 +101,8 @@ function ns.Widgets.ProfileSelector(parent, getFunc)
 		UIDropDownMenu_AddButton(info, level)
 
 		--custom profiles
-		for i,v in ipairs(profiles) do
-			if v ~= oUFAbu.DEFAULT then 
+		for _, v in ipairs(profiles) do
+			if v ~= oUFAbu.DEFAULT then
 				local info = UIDropDownMenu_CreateInfo()
 				info.text = v
 				info.value = v

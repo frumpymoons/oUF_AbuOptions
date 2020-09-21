@@ -139,7 +139,7 @@ function panel:Create()
 		self.buttons[i] = button
 	end
 
-	--[[ Right Window ]] 
+	--[[ Right Window ]]
 	local config = ns.Widgets.Group(self, 'Config')
 	config:SetPoint('TOPLEFT', list, 'TOPRIGHT', 6, 0)
 	config:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -12, 12)
@@ -172,7 +172,7 @@ function panel:Create()
 	style:SetPoint("TOPLEFT", scale, "TOPLEFT", -17, -33)
 
 	-- Tags
-	local healthTag = createDropDown(self, "TextHealthTag", "HealthTag", false, 
+	local healthTag = createDropDown(self, "TextHealthTag", "HealthTag", false,
 		{
 			{ value = 'NUMERIC', text = L.Tag_Numeric, tooltip = L.Tag_NumericTip },
 			{ value = 'BOTH', 	 text = L.Tag_Both,    tooltip = L.Tag_BothTip },
@@ -205,7 +205,6 @@ function panel:Create()
 	buffPos:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 0, -55)
 	local debuffPos = createDropDown(self, 'DebuffPos', 'debuffPos', true, AuraPositionMenu)
 	debuffPos:SetPoint('TOPLEFT', buffPos, 'TOPLEFT', 0, -43)
-	
 
 	--Castbars
 	local castbar = config:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -245,7 +244,7 @@ function panel:Create()
 	function cpypos:GetSavedValue()
 		return GET(self.db)[2]
 	end
-	
+
 	local cbscale = createSlider(self, 'Scale', 'cbscale', true, .5, 1.5, 0.05)
 	cbscale:SetPoint('TOPLEFT', cpypos, 'TOPLEFT', 0, -35)
 	cbscale.GetFormattedText = function(self, value)
@@ -276,7 +275,7 @@ function panel:Update()
 
 	if type(GET('cbshow')) == 'boolean' then
 		self.CastBar:Show()
-	else 
+	else
 		self.CastBar:Hide()
 	end
 end
