@@ -191,18 +191,19 @@ function panel:Create()
 		})
 	powerTag:SetPoint('TOPLEFT', healthTag, "TOPLEFT", 0, -43)
 
+	-- Auras
+	local enBuff = createCheckButton(self, 'EnableBuff', 'enableBuff', true)
+	enBuff:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 17, -43)
+	local enDebuff = createCheckButton(self, 'EnableDebuff', 'enableDebuff', true)
+	enDebuff:SetPoint('TOPLEFT', enBuff, 'TOPLEFT', 0, -23)
 
-	local enAura = createCheckButton(self, 'EnableAuras', 'enableAura', true)
-	enAura:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 17, -33)
-	-- or
 	local AuraPositionMenu = {
 		{ value = 'TOP', text = L.TOP },
 		{ value = 'BOTTOM', text = L.BOTTOM },
 		{ value = 'LEFT', text = L.LEFT },
-		{ value = 'NONE', text = DISABLE },
 	}
 	local buffPos = createDropDown(self, 'BuffPos', 'buffPos', true, AuraPositionMenu)
-	buffPos:SetPoint('TOPLEFT', powerTag, 'TOPLEFT', 0, -55)
+	buffPos:SetPoint('TOPLEFT', enDebuff, 'TOPLEFT', -17, -43)
 	local debuffPos = createDropDown(self, 'DebuffPos', 'debuffPos', true, AuraPositionMenu)
 	debuffPos:SetPoint('TOPLEFT', buffPos, 'TOPLEFT', 0, -43)
 
