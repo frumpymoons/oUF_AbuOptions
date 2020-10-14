@@ -211,8 +211,7 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 		insets = {left = 4, right = 4, top = 4, bottom = 4}
 	}
 
-	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, BackdropTemplateMixin and "FauxScrollFrameTemplate, BackdropTemplate"
-										or 'FauxScrollFrameTemplate')
+	local scrollFrame = CreateFrame('ScrollFrame', '$parentFaux', f, BackdropTemplateMixin and "FauxScrollFrameTemplate, BackdropTemplate" or 'FauxScrollFrameTemplate')
 	scrollFrame:SetPoint('TOPLEFT', editFrame, 'BOTTOMLEFT', 0, -4)
 	scrollFrame:SetPoint('BOTTOMRIGHT')
 	scrollFrame:SetScript('OnVerticalScroll', function(self, offset)
@@ -221,8 +220,8 @@ function ns.Widgets.AuraEditor(parent, title, desc)
 		f:UpdateScroll()
 	end)
 	scrollFrame:SetBackdrop(backdrop)
-	scrollFrame:SetBackdropBorderColor(0.4, 0.4, 0.4)
 	scrollFrame:SetBackdropColor(0, 0, 0, 0.3)
+	scrollFrame:SetBackdropBorderColor(0.4, 0.4, 0.4)
 	f.scrollFrame = scrollFrame
 
 	-- Fix the bar position

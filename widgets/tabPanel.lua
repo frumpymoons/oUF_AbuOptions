@@ -2,6 +2,14 @@
 local _, ns = ...
 ns.Widgets = ns.Widgets or {}
 
+local BACKDROP = {
+	bgFile = nil,
+	edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
+	edgeSize = 16,
+	tile = true, tileSize = 16,
+	insets = {left = 4, right = 4, top = 4, bottom = 4}
+}
+
 ---------------------------------------------------------------
 --		Adding tabs
 
@@ -42,11 +50,13 @@ local function addTab(self, name, panel)
 	t.sl:SetTexture([[Interface\OptionsFrame\UI-OptionsFrame-Spacer]])
 	t.sl:SetPoint('BOTTOMRIGHT', t, 'BOTTOMLEFT', 11, -6)
 	t.sl:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', 16, -(34 + t:GetHeight() + 7))
+	t.sl:SetVertexColor(0,0,0,0)
 
 	t.sr = t:CreateTexture(nil, 'BACKGROUND')
 	t.sr:SetTexture([[Interface\OptionsFrame\UI-OptionsFrame-Spacer]])
 	t.sr:SetPoint('BOTTOMLEFT', t, 'BOTTOMRIGHT', -11, -7)
 	t.sr:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -16, -(34 + t:GetHeight() + 7))
+	t.sr:SetVertexColor(0,0,0,0)
 
 	--place the new tab
 	--if its the first tab, anchor to the main frame
@@ -107,7 +117,9 @@ function ns.Widgets.TabPanel(parent, text, icon)
 	end
 
 	-- Panel Area
-	local panelArea = CreateFrame('Frame', parent:GetName() .. '_PanelArea', parent, 'OmniCC_TabPanelTemplate')
+	local panelArea = CreateFrame('Frame', parent:GetName() .. '_PanelArea', parent, BackdropTemplateMixin and 'BackdropTemplate')
+	panelArea:SetBackdrop(BACKDROP)
+	panelArea:SetBackdropBorderColor(0.4, 0.4, 0.4)
 	panelArea:SetPoint('TOPLEFT', 4, -56)
 	panelArea:SetPoint('BOTTOMRIGHT', -4, 4)
 	panelArea.Add = function(self, panel)
