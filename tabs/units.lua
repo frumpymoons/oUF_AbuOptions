@@ -218,7 +218,7 @@ function panel:Create()
 	cbShow:SetPoint('TOPLEFT', castbar, 'CENTER', -80, -14)
 	local cbWidth = createSlider(self, 'Width', 'cbwidth', true, 100, 350, 10)
 	cbWidth:SetPoint('TOPLEFT', cbShow, 'TOPLEFT', -2, -43)
-	local cbHeight = createSlider(self, 'Height', 'cbheight', true, 10, 50, 2)
+	local cbHeight = createSlider(self, 'Height', 'cbheight', true, 10, 50, 1)
 	cbHeight:SetPoint('TOPLEFT', cbWidth, 'TOPLEFT', 0, -35)
 	local cbIcon = createDropDown(self, 'CastbarIcon', 'cbicon', true,
 		{
