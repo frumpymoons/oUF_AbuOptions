@@ -1,9 +1,9 @@
-## Interface: 90002
-## Author: Abu
+## Interface: 90005
+## Author: pngmn
 ## Title: oUF_|cffffffffAbu|rOptions
 ## Notes: Option Panel for oUF_Abu.
 ## Dependencies: oUF_Abu
-## Version: 9.0-1
+## Version: @project-version@
 ## LoadOnDemand: 1
 
 widgets\widgets.xml
