@@ -1,0 +1,16 @@
+## Interface: 11307
+## Author: pngmn
+## Title: oUF_|cffffffffAbu|rOptions
+## Notes: Option Panel for oUF_Abu.
+## Dependencies: oUF_Abu
+## Version: @project-version@
+## LoadOnDemand: 1
+
+widgets\widgets.xml
+
+mainpanels.lua
+
+tabs\auras.lua
+tabs\general.lua
+tabs\positions.lua
+tabs\units.lua

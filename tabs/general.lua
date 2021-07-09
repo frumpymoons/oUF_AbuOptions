@@ -241,7 +241,7 @@ local function classAuraBar(parent)
 	end
 
 	f.Update = function(self)
-		if ns.Classic then return self:Hide() end
+		if not ns.Mainline then return self:Hide() end
 		local index = GetSpecialization()
 		if not index or not self:GetParent():IsVisible() then
 			return self:Hide()
@@ -277,7 +277,7 @@ local function classAuraBar(parent)
 	end
 
 	f:SetScript('OnEvent', f.Update)
-	if not ns.Classic then
+	if ns.Mainline then
 		f:RegisterEvent('PLAYER_TALENT_UPDATE')
 	end
 
